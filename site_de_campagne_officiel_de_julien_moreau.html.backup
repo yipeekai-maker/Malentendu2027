@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julien Moreau 2027 | Site de Campagne Officiel</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter (corps), Montserrat (titres), Architects Daughter (manuscrit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Montserrat:wght@400;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        presidential: {
+                            navy: '#11223f',     // Bleu nuit de l'affiche
+                            blue: '#2a5ca8',     // Bleu drapeau
+                            red: '#dc2626',      // Rouge "Malentendu" et drapeau
+                            sand: '#f4f3ee',     // Fond texturé de l'affiche
+                            gold: '#dfa526',     // Jaune/Or des icônes
+                            slate: '#334155'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['Montserrat', 'sans-serif'],
+                        hand: ['Architects Daughter', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Effet de texture papier discret pour coller à l'affiche */
+        .paper-texture {
+            background-color: #f4f3ee;
+            background-image: radial-gradient(rgba(17, 34, 63, 0.03) 1px, transparent 0), radial-gradient(rgba(17, 34, 63, 0.03) 1px, transparent 0);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+        }
+        
+        /* Transition douce pour le changement de page */
+        .page-fade-enter {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animation d'apparition de la mesure magique */
+        .mesure-appear {
+            animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.96) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+</head>
+<body class="paper-texture min-height-screen flex flex-col font-sans text-presidential-navy selection:bg-presidential-gold selection:text-white">
+
+    <!-- NAV BAR TRICOLORE -->
+    <div class="h-1.5 w-full flex">
+        <div class="h-full w-1/3 bg-blue-600"></div>
+        <div class="h-full w-1/3 bg-white"></div>
+        <div class="h-full w-1/3 bg-red-600"></div>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-white/85 backdrop-blur-md sticky top-0 z-50 border-b border-presidential-navy/10">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+            <a href="#" onclick="showPage('accueil')" class="flex items-center gap-3">
+                <!-- Mini Logo tricolore rond -->
+                <div class="relative w-10 h-10 rounded-full border-2 border-presidential-navy flex items-center justify-center bg-white shadow-sm overflow-hidden">
+                    <span class="text-[9px] font-extrabold tracking-tighter leading-none text-center text-presidential-navy">VOTEZ<br>MOREAU</span>
+                    <div class="absolute bottom-0 left-0 right-0 h-1 flex">
+                        <div class="w-1/3 bg-blue-600"></div>
+                        <div class="w-1/3 bg-white"></div>
+                        <div class="w-1/3 bg-red-600"></div>
+                    </div>
+                </div>
+                <div>
+                    <span class="font-title font-black text-lg tracking-wider text-presidential-navy block leading-none">JULIEN MOREAU</span>
+                    <span class="text-[10px] font-bold text-presidential-blue tracking-widest uppercase block mt-0.5">Pour un malentendu en 2027</span>
+                </div>
+            </a>
+            
+            <nav class="flex items-center gap-1 sm:gap-4 mt-2 sm:mt-0">
+                <button onclick="showPage('accueil')" id="nav-accueil" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition bg-presidential-navy text-white">Accueil</button>
+                <button onclick="showPage('programme')" id="nav-programme" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5">Le Programme</button>
+                <button onclick="showPage('candidat')" id="nav-candidat" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5">Le Candidat</button>
+                <button onclick="showPage('contact')" id="nav-contact" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5">Contact</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ZONE DE NOTIFICATIONS PERSO (TOASTS) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-6xl mx-auto w-full px-4 py-8">
+
+        <!-- ============================================== -->
+        <!-- VIEW 1: ACCUEIL                                -->
+        <!-- ============================================== -->
+        <section id="view-accueil" class="page-fade-enter space-y-12">
+            
+            <!-- HERO / REPRODUCTION DE L'AFFICHE -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-presidential-navy/10 grid grid-cols-1 lg:grid-cols-12">
+                
+                <!-- Partie gauche : Slogans et Textes -->
+                <div class="p-8 sm:p-12 lg:col-span-7 flex flex-col justify-between space-y-8">
+                    <div class="space-y-6">
+                        <!-- Badge Votez Moreau -->
+                        
+
+                        <!-- Titre d'affiche -->
+                        <div class="space-y-1">
+                            <h1 class="font-title font-black text-5xl sm:text-7xl tracking-tighter text-presidential-navy leading-none">
+                                JULIEN<br>MOREAU
+                            </h1>
+                            <div class="h-1.5 w-40 bg-presidential-gold rounded-full my-4"></div>
+                        </div>
+
+                        <!-- Slogan manuscrit -->
+                        <div class="space-y-3">
+                            <p class="font-hand text-3xl sm:text-4xl text-presidential-blue rotate-[-2deg] origin-left">
+                                sur un malentendu ça peut passer
+                            </p>
+                            <!-- Smiley Jaune Dessiné -->
+                            <div class="flex items-center gap-2 text-presidential-gold pl-4">
+                                <svg class="w-10 h-10 stroke-current fill-none stroke-[2]" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke-linecap="round" />
+                                    <line x1="9" y1="9" x2="9.01" y2="9" stroke-linecap="round" stroke-width="3" />
+                                    <line x1="15" y1="9" x2="15.01" y2="9" stroke-linecap="round" stroke-width="3" />
+                                </svg>
+                                <span class="text-xs font-semibold uppercase tracking-widest text-presidential-navy/60">Gardons le sourire !</span>
+                            </div>
+                        </div>
+
+                        <p class="text-presidential-slate text-lg leading-relaxed max-w-xl">
+                            Face aux crises physiques mondiales, remplaçons l'illusion d'une croissance nominale infinie par un modèle souverain, sobre et joyeusement résilient. Pas de grands discours, mais <strong>150 propositions concrètes</strong> de planification pragmatique.
+                        </p>
+                    </div>
+
+                    <!-- Les 3 piliers du bas de l'affiche -->
+                    <div class="grid grid-cols-3 gap-3 pt-6 border-t border-presidential-navy/10">
+                        <div class="text-center p-2">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-presidential-navy/5 flex items-center justify-center text-presidential-gold mb-2">
+                                <!-- Handshake Icon -->
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <h4 class="font-bold text-xs sm:text-sm text-presidential-navy">Proche de vous</h4>
+                        </div>
+                        <div class="text-center p-2 border-x border-presidential-navy/10">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-presidential-navy/5 flex items-center justify-center text-presidential-gold mb-2">
+                                <!-- Chat bubble Icon -->
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            </div>
+                            <h4 class="font-bold text-xs sm:text-sm text-presidential-navy">À votre écoute</h4>
+                        </div>
+                        <div class="text-center p-2">
+                            <div class="w-10 h-10 mx-auto rounded-full bg-presidential-navy/5 flex items-center justify-center text-presidential-gold mb-2">
+                                <!-- Coffee/Tea Icon -->
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h4 class="font-bold text-xs sm:text-sm text-presidential-navy">Du concret</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Partie droite : Portrait Silhouette stylisé reprenant la pose du candidat (Thumbs Up) -->
+                <div class="lg:col-span-5 bg-gradient-to-t from-presidential-blue to-blue-950 flex flex-col justify-between items-center p-8 relative min-h-[400px]">
+                    
+                    <!-- Badge officiel "Votez Moreau" flottant -->
+                    <div class="absolute top-6 right-6 bg-white rounded-full p-4 shadow-xl border-4 border-presidential-navy rotate-12 flex items-center justify-center w-28 h-28">
+                        <div class="text-center">
+                            <span class="font-title font-black text-lg text-presidential-navy block leading-tight">VOTEZ</span>
+                            <span class="font-title font-black text-xl text-presidential-blue block leading-none">MOREAU</span>
+                            <div class="h-1 w-12 bg-red-600 mx-auto mt-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Illustration candidate interactive au centre -->
+                    <div class="my-auto text-white text-center space-y-4">
+                        <!-- Dessin Vectoriel Stylisé du Candidat hyper expressif (Sourire et Thumbs Up) -->
+                        <svg class="w-64 h-64 mx-auto drop-shadow-lg text-white fill-none stroke-current" viewBox="0 0 200 200">
+                            <!-- Visage -->
+                            <path d="M60 90 C 60 40, 140 40, 140 90 C 140 130, 60 130, 60 90" stroke-width="4" stroke-linecap="round"/>
+                            <!-- Cheveux en épis -->
+                            <path d="M65 65 L 75 50 L 85 55 L 100 45 L 115 55 L 125 48 L 135 62" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <!-- Yeux écarquillés contents -->
+                            <circle cx="85" cy="80" r="10" stroke-width="4"/>
+                            <circle cx="85" cy="80" r="3" fill="currentColor"/>
+                            <circle cx="115" cy="80" r="10" stroke-width="4"/>
+                            <circle cx="115" cy="80" r="3" fill="currentColor"/>
+                            <!-- Sourcils levés -->
+                            <path d="M73 68 C 80 62, 92 65, 92 65" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M127 68 C 120 62, 108 65, 108 65" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Large sourire -->
+                            <path d="M75 105 Q 100 125, 125 105" stroke-width="4" stroke-linecap="round"/>
+                            <!-- Dents -->
+                            <path d="M80 109 L 120 109" stroke-width="2"/>
+                            <!-- Deux gros pouces en l'air -->
+                            <!-- Pouce gauche -->
+                            <path d="M30 110 L 30 90 C 30 80, 45 80, 45 90 L 45 110" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M20 110 C 20 120, 55 120, 55 110 L 55 150 L 20 150 Z" stroke-width="4" stroke-linecap="round" fill="currentColor" class="text-blue-900/40"/>
+                            <!-- Pouce droit -->
+                            <path d="M170 110 L 170 90 C 170 80, 155 80, 155 90 L 155 110" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M180 110 C 180 120, 145 120, 145 110 L 145 150 L 180 150 Z" stroke-width="4" stroke-linecap="round" fill="currentColor" class="text-blue-900/40"/>
+                            <!-- Col de veste et chemise -->
+                            <path d="M70 130 L 100 160 L 130 130" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M85 135 L 85 180" stroke-width="2"/>
+                            <path d="M115 135 L 115 180" stroke-width="2"/>
+                        </svg>
+                        
+                        <div class="bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20">
+                            <span class="font-bold tracking-wide">Julien Moreau, le candidat que vous n'avez pas vu venir</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LE BOUTON MAGIQUE "MALENTENDU" -->
+            <div class="bg-gradient-to-r from-red-500 to-red-700 rounded-3xl p-8 sm:p-12 text-white text-center shadow-xl relative overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_45%)]"></div>
+                
+                <div class="relative z-10 max-w-3xl mx-auto space-y-8">
+                    <div class="space-y-4">
+                        <span class="bg-white/20 text-white font-black text-xs uppercase px-4 py-1.5 rounded-full tracking-widest border border-white/30 inline-block">FONCTIONNALITÉ STAR</span>
+                        <h2 class="font-title font-black text-3xl sm:text-5xl tracking-tight">Le Générateur de Malentendu</h2>
+                        <p class="text-red-100 text-base sm:text-lg max-w-2xl mx-auto">
+                            Pas envie d'ingurgiter 150 mesures de planification thermodynamique ce matin ? Choisissez le hasard républicain !
+                        </p>
+                    </div>
+
+                    <!-- Bouton Déclencheur -->
+                    <div>
+                        <button onclick="tirerMesure()" class="group relative inline-flex items-center gap-3 bg-white text-red-600 font-title font-black text-lg sm:text-2xl px-10 py-5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-presidential-sand">
+                            <span class="text-3xl animate-bounce">🎲</span>
+                            <span>SUR UN MALENTENDU !</span>
+                        </button>
+                    </div>
+
+                    <!-- Cadre de Résultat de la Mesure -->
+                    <div class="bg-white text-presidential-navy rounded-2xl p-6 sm:p-8 text-left shadow-2xl border border-presidential-navy/10 min-h-[140px] flex items-center justify-center">
+                        
+                        <!-- État par défaut -->
+                        <div id="mesure-placeholder" class="text-center py-6 space-y-3">
+                            <p class="font-hand text-2xl sm:text-3xl text-presidential-blue">
+                                " N'aie pas peur appuie sur le bouton ça va bien se passer "
+                            </p>
+                            <p class="text-xs text-presidential-navy/50 font-semibold tracking-wider uppercase">Aucun animal n'a été blessé lors de la rédaction de ce programme.</p>
+                        </div>
+
+                        <!-- État après clic -->
+                        <div id="mesure-resultat" class="hidden mesure-appear w-full space-y-6">
+                            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-presidential-navy/10 pb-4">
+                                <div class="flex items-center gap-2">
+                                    <span id="res-icone" class="text-3xl">⚡</span>
+                                    <div>
+                                        <span id="res-categorie" class="text-xs font-black uppercase tracking-wider text-presidential-blue">Énergie</span>
+                                        <span id="res-id" class="text-[10px] font-bold text-presidential-navy/40 block">CODE: NRJ-01</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="partagerMesure('twitter')" class="p-2 rounded-full hover:bg-presidential-navy/5 text-presidential-navy transition" title="Partager sur X (Twitter)">
+                                        <!-- X / Twitter Icon -->
+                                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                    </button>
+                                    <button onclick="partagerMesure('whatsapp')" class="p-2 rounded-full hover:bg-presidential-navy/5 text-presidential-navy transition" title="Partager sur WhatsApp">
+                                        <!-- WhatsApp Icon -->
+                                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.324 5.328 0 12.008 0c3.233.001 6.271 1.257 8.557 3.543 2.286 2.287 3.541 5.328 3.535 8.561-.013 6.677-5.337 12-12.012 12-2.002-.001-3.973-.496-5.735-1.443L0 24zm6.49-4.704c1.548.938 3.125 1.462 4.96 1.463 5.4 0 9.792-4.39 9.799-9.79C21.312 5.76 17.15 1.835 12 1.835c-5.14 0-9.317 4.187-9.324 9.327-.001 1.956.513 3.868 1.491 5.568L3.13 20.875l4.318-1.579z"/></svg>
+                                    </button>
+                                    <button onclick="copierMesure()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-presidential-navy text-white text-xs font-semibold hover:bg-presidential-navy/90 transition">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                        <span>Copier la proposition</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <h3 id="res-titre" class="font-title font-black text-xl sm:text-2xl text-presidential-navy">Titre de la Mesure</h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-4">
+                                    <div class="bg-presidential-sand/40 p-4 rounded-xl border border-presidential-navy/5">
+                                        <strong class="text-red-600 block mb-1">P. Postulat initial :</strong>
+                                        <p id="res-postulat" class="text-presidential-slate leading-relaxed">...</p>
+                                    </div>
+                                    <div class="bg-blue-50/50 p-4 rounded-xl border border-presidential-blue/5">
+                                        <strong class="text-presidential-blue block mb-1">A. Moyens d'action :</strong>
+                                        <p id="res-action" class="text-presidential-slate leading-relaxed">...</p>
+                                    </div>
+                                    <div class="bg-amber-50/50 p-4 rounded-xl border border-presidential-gold/5">
+                                        <strong class="text-amber-700 block mb-1">F. Financement :</strong>
+                                        <p id="res-financement" class="text-presidential-slate leading-relaxed">...</p>
+                                    </div>
+                                    <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-500/5">
+                                        <strong class="text-emerald-700 block mb-1">R. Répercussions physiques :</strong>
+                                        <p id="res-repercussions" class="text-presidential-slate leading-relaxed">...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- RAPIDE PRÉSENTATION DES THÉMATIQUES -->
+            <div class="space-y-6">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="font-title font-black text-3xl tracking-tight">Le Programme par Thématiques</h2>
+                    <p class="text-presidential-slate">Explorez l'intégralité du Livre Blanc classé par grands axes politiques.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="themes-grid">
+                    <!-- Généré dynamiquement en JS pour correspondre au JSON -->
+                </div>
+
+                <div class="text-center pt-4">
+                    <button onclick="showPage('programme')" class="inline-flex items-center gap-2 bg-presidential-navy text-white hover:bg-presidential-navy/95 transition font-semibold px-6 py-3 rounded-full text-sm">
+                        <span>Voir tout le programme</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 2: LE PROGRAMME                           -->
+        <!-- ============================================== -->
+        <section id="view-programme" class="hidden page-fade-enter space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-presidential-navy/10 pb-6">
+                <div>
+                    <h1 class="font-title font-black text-3xl sm:text-4xl">Le Programme Complet</h1>
+                    <p class="text-presidential-slate mt-1">150 propositions réparties dans les 10 thèmes du Livre Blanc pour 2027.</p>
+                </div>
+                <!-- Recherche -->
+                <div class="relative max-w-sm w-full">
+                    <input type="text" id="search-input" oninput="filtrerProgramme()" placeholder="Rechercher une mesure (ex: rail, taxe)..." class="w-full bg-white border border-presidential-navy/20 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-presidential-blue focus:border-transparent text-sm">
+                    <span class="absolute left-4 top-3.5 text-presidential-navy/40">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Liste des catégories & mesures -->
+            <div id="programme-list" class="space-y-8">
+                <!-- Rempli dynamiquement par JS -->
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 3: LE CANDIDAT                            -->
+        <!-- ============================================== -->
+        <section id="view-candidat" class="hidden page-fade-enter space-y-8 max-w-4xl mx-auto">
+            <div class="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-presidential-navy/10 space-y-8">
+                
+                <div class="flex flex-col md:flex-row items-center gap-8 border-b border-presidential-navy/10 pb-8">
+                    <div class="w-40 h-40 rounded-full bg-gradient-to-tr from-presidential-blue to-presidential-navy flex items-center justify-center text-white text-6xl shadow-inner flex-shrink-0">
+                        👨‍💼
+                    </div>
+                    <div class="space-y-3 text-center md:text-left">
+                        <h1 class="font-title font-black text-3xl sm:text-4xl text-presidential-navy">Qui est Julien Moreau ?</h1>
+                        <p class="font-hand text-2xl text-presidential-blue rotate-[-1deg]">"Un esprit sain dans un monde aux ressources finies"</p>
+                        <p class="text-sm font-bold uppercase tracking-wider text-presidential-navy/60">Candidat indépendant libre d'attaches spéculatives</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6 text-presidential-slate leading-relaxed text-base">
+                    <h3 class="font-title font-black text-xl text-presidential-navy">Notre philosophie : la Lucidité et l'Action</h3>
+                    <p>
+                        Julien Moreau n'est pas un politicien de carrière. Ingénieur de formation et passionné par les questions thermodynamiques et cognitives, il a compris une chose essentielle : <strong>le débat politique actuel refuse de regarder la réalité physique en face</strong>.
+                    </p>
+                    <p>
+                        Inspiré par la rigueur de Jean-Marc Jancovici, l'équilibre diplomatique de Dominique de Villepin, et la recherche sur les biais cognitifs d'Albert Moukheiber, Julien a fondé ce programme sur un postulat unique : la planification doit être <strong>biophysique, souveraine et profondément humaniste</strong>.
+                    </p>
+
+                    <blockquote class="border-l-4 border-presidential-gold pl-4 py-2 italic bg-presidential-sand/50 rounded-r-xl">
+                        "Nous ne pouvons pas négocier avec les lois de la physique. Le pétrole va se contracter, le climat va changer. Ce qui doit nous importer n'est pas la courbe du PIB, mais la sécurité réelle et l'épanouissement de chaque citoyen."
+                    </blockquote>
+
+                    <h3 class="font-title font-black text-xl text-presidential-navy">Pourquoi "Sur un malentendu" ?</h3>
+                    <p>
+                        Parce que la politique s'est trop longtemps prise au sérieux tout en prenant des décisions absurdes. Nous croyons qu'on peut amener des idées de planification écologique radicale et de justice sociale avec un sourire sincère, de l'auto-dérision et beaucoup de bienveillance collective.
+                    </p>
+                    <p>
+                        En votant pour Julien Moreau, vous ne votez pas pour une promesse de richesse monétaire infinie, mais pour un plan de sauvetage national enthousiaste et autofinancé.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 4: CONTACT                                -->
+        <!-- ============================================== -->
+        <section id="view-contact" class="hidden page-fade-enter space-y-8 max-w-2xl mx-auto">
+            <div class="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-presidential-navy/10 space-y-8">
+                <div class="text-center space-y-3">
+                    <h1 class="font-title font-black text-3xl sm:text-4xl text-presidential-navy">Rejoignez le mouvement !</h1>
+                    <p class="text-presidential-slate">Besoin d'aide, envie de militer ou simplement de nous laisser un mot d'encouragement ?</p>
+                </div>
+
+                <form onsubmit="submitContact(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold uppercase tracking-wider text-presidential-navy/80">Nom ou Prénom</label>
+                            <input type="text" required class="w-full bg-presidential-sand/40 border border-presidential-navy/20 focus:ring-2 focus:ring-presidential-blue rounded-xl px-4 py-3 text-sm focus:outline-none">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold uppercase tracking-wider text-presidential-navy/80">Adresse Email</label>
+                            <input type="email" required class="w-full bg-presidential-sand/40 border border-presidential-navy/20 focus:ring-2 focus:ring-presidential-blue rounded-xl px-4 py-3 text-sm focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold uppercase tracking-wider text-presidential-navy/80">Votre département</label>
+                        <select class="w-full bg-presidential-sand/40 border border-presidential-navy/20 focus:ring-2 focus:ring-presidential-blue rounded-xl px-4 py-3 text-sm focus:outline-none">
+                            <option value="">Sélectionner...</option>
+                            <option value="75">75 - Paris</option>
+                            <option value="14">14 - Calvados (Bayeux)</option>
+                            <option value="other">Autre département / Étranger</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold uppercase tracking-wider text-presidential-navy/80">Message</label>
+                        <textarea required rows="4" placeholder="Votre message..." class="w-full bg-presidential-sand/40 border border-presidential-navy/20 focus:ring-2 focus:ring-presidential-blue rounded-xl px-4 py-3 text-sm focus:outline-none"></textarea>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="voter-checkbox" class="mt-1 h-4 w-4 rounded border-gray-300 text-presidential-blue focus:ring-presidential-blue">
+                        <label for="voter-checkbox" class="text-xs text-presidential-slate leading-tight cursor-pointer">
+                            Je confirme que je suis prêt à glisser ce bulletin dans l'urne en 2027, même sur un malentendu.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-presidential-navy text-white hover:bg-presidential-navy/95 transition font-title font-black tracking-wide py-4 rounded-xl text-center shadow-lg">
+                        ENVOYER MON MESSAGE SOUVERAIN
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-presidential-navy text-white border-t border-white/10 mt-12 py-12">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="space-y-4">
+                <span class="font-title font-black text-xl tracking-wider block">JULIEN MOREAU 2027</span>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    Un projet politique inspiré du bon sens biophysique, né d'un Livre Blanc pragmatique et humaniste.
+                </p>
+                <div class="flex items-center gap-2">
+                    <span class="inline-block h-3 w-3 rounded-full bg-blue-600"></span>
+                    <span class="inline-block h-3 w-3 rounded-full bg-white"></span>
+                    <span class="inline-block h-3 w-3 rounded-full bg-red-600"></span>
+                    <span class="text-xs text-gray-400 font-semibold uppercase ml-2">Pour la République</span>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <h4 class="font-bold text-sm uppercase tracking-widest text-presidential-gold">Mentions & Légendes</h4>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Ce site internet est un outil d'intérêt public. "Sur un malentendu ça peut passer" est un hommage affectueux au cinéma de comédie français.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="font-bold text-sm uppercase tracking-widest text-presidential-gold">Plan de navigation</h4>
+                <ul class="text-sm space-y-2 text-gray-400">
+                    <li><a href="#" onclick="showPage('accueil')" class="hover:text-white transition">Accueil & Tirage aléatoire</a></li>
+                    <li><a href="#" onclick="showPage('programme')" class="hover:text-white transition">Consulter les 150 mesures</a></li>
+                    <li><a href="#" onclick="showPage('candidat')" class="hover:text-white transition">Qui est Julien ?</a></li>
+                    <li><a href="#" onclick="showPage('contact')" class="hover:text-white transition">Formulaire de contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-4 border-t border-white/10 mt-8 pt-8 text-center text-xs text-gray-500">
+            © 2026 Julien Moreau 2027 - Tous droits biophysiques réservés.
+        </div>
+    </footer>
+
+    <!-- SCRIPT DU SITE -->
+    <script>
+        // PROGRAMME COMPLET BASÉ SUR LE LIVRE BLANC (10 catégories de 15 mesures chacune)
+        // Les catégories et leurs icônes :
+        const categories = {
+            "energie": { title: "Énergie & Planification Écologique", icon: "⚡" },
+            "geopolitique": { title: "Géopolitique, Souveraineté & Défense", icon: "🌍" },
+            "economie": { title: "Économie, Fiscalité & Post-Croissance", icon: "📈" },
+            "institutions": { title: "Institutions & Éducation", icon: "🏛️" },
+            "sante": { title: "Santé Globale & Prévention", icon: "🏥" },
+            "travail": { title: "Travail & Utilité Sociale", icon: "🛠️" },
+            "agriculture": { title: "Agriculture & Autonomie Nourricière", icon: "🚜" },
+            "numerique": { title: "Numérique & Technologies Sobres", icon: "💻" },
+            "justice": { title: "Justice & Gestion des Crises", icon: "⚖️" },
+            "culture": { title: "Culture & Nouveaux Récits", icon: "🎨" }
+        };
+
+        // On intègre l'ensemble des 150 mesures du Livre Blanc pour un fonctionnement 100% autonome et immédiat
+        const programme = [
+            // ÉNERGIE (15 mesures)
+            { id: "nrj-01", cat: "energie", titre: "Carte Carbone Individuelle", postulat: "La taxe carbone monétaire pénalise les plus pauvres. Seul le rationnement biophysique est socialement juste.", action: "Attribution d'un quota annuel non transférable de 2 tonnes de CO2 par citoyen pour l'énergie, les transports et les vols.", financement: "Coût administratif: 600M€/an, compensé par la suppression de 11Md€ de subventions directes aux fossiles.", repercussions: "Chute immédiate des importations de pétrole; réduction programmée de 6% des émissions par an." },
+            { id: "nrj-02", cat: "energie", titre: "Plan de Carénage et EPR2", postulat: "La décarbonation complète exige d'électrifier massivement l'industrie et les usages lourds de base.", action: "Nationalisation d'EDF à 100%; construction de 12 réacteurs EPR2 et maintien du parc existant à 60 ans.", financement: "85Md€ étalés sur 15 ans (5,6Md€/an), financés par un 'Livret Souverain Énergie' défiscalisé.", repercussions: "Garantie d'une électricité à coût stable (~60€/MWh) et décarbonée; indépendance énergétique nationale." },
+            { id: "nrj-03", cat: "energie", titre: "Rénovation Thermique Obligatoire par Quartier", postulat: "Les chantiers individuels isolés sont inefficaces. La rénovation doit être industrielle et coordonnée.", action: "Interdiction des passoires thermiques dès 2027; chantiers d'isolation globaux gérés par des consortiums publics.", financement: "14Md€/an, financés par ponction sur les loyers non rénovés et réduction des factures d'importation de gaz (-4,2Md€/an).", repercussions: "Éradication de la précarité énergétique pour 4 millions de foyers d'ici 2030." },
+            { id: "nrj-04", cat: "energie", titre: "Interdiction de la Publicité Énergivore", postulat: "La publicité stimule la dissonance cognitive et manipule nos biais d'achat pour surconsommer des ressources.", action: "Bannissement total de la publicité pour les SUV, les vols aériens commerciaux et les vêtements neufs jetables.", financement: "Baisse de TVA de 800M€, compensée par une taxe de 20% sur les budgets marketing restants des multinationales.", repercussions: "Libération d'attention cognitive collective; baisse structurelle des importations futiles." },
+            { id: "nrj-05", cat: "energie", titre: "Nationalisation et Relance du Fret Ferroviaire", postulat: "Le transport routier de marchandises est un gouffre d'énergie fossile insoutenable.", action: "Interdiction des camions > 3,5t sur autoroutes pour trajets > 300km si alternative rail existante; réouverture des gares de tri.", financement: "4,5Md€/an pour le rail, financés par une écotaxe poids lourds de crise et la renationalisation des péages d'autoroutes.", repercussions: "Retrait de 2M de camions par an des routes; baisse de 8% de la demande de gazole routier." },
+            { id: "nrj-06", cat: "energie", titre: "Aide à la 'Low-Tech' Automobile Légère", postulat: "Remplacer les voitures thermiques par des SUV électriques de 2t consomme trop de lithium et de métaux rares.", action: "Subvention de 4000€ pour l'achat de véhicules électriques < 600kg bridés à 110km/h.", financement: "3Md€/an de subventions, entièrement financés par un malus de 15 000€ sur les véhicules neufs > 1,6t.", repercussions: "Démocratisation de l'électromobilité sobre; division par 4 de l'empreinte minière des transports." },
+            { id: "nrj-07", cat: "energie", titre: "Sortie des Engrais Azotés Chimiques", postulat: "Notre souveraineté alimentaire dépend de gaz importé pour synthétiser les engrais chimiques.", action: "Plan de transition vers l'agroécologie: interdiction progressive des engrais azotés de synthèse.", financement: "Fonds de soutien de 2,5Md€/an aux paysans, financé par réorientation des aides industrielles de la PAC.", repercussions: "Restauration de l'azote organique des sols; fin de la dépendance de l'agriculture au gaz." },
+            { id: "nrj-08", cat: "energie", titre: "Plafonnement Strict du Trafic Aérien", postulat: "L'aviation commerciale ne dispose d'aucune alternative décarbonée viable à l'échelle requise.", action: "Fermeture des lignes intérieures < 4h30 en train; quota maximal de 4 vols long-courriers autorisés sur une vie entière.", financement: "Taxation du kérosène au taux routier standard (+3,5Md€/an de recettes d'État).", repercussions: "Chute de 60% du trafic aérien national; relocalisation saine de l'économie du tourisme." },
+            { id: "nrj-09", cat: "energie", titre: "Électrification Forcée de la Métallurgie", postulat: "L'industrie de base doit être préservée mais totalement décarbonée par le remplacement du charbon.", action: "Subventions pour la conversion des hauts-fourneaux vers la réduction directe à l'hydrogène bas-carbone.", financement: "2Md€/an via le Fonds d'Investissement Stratégique, financé par la mise aux enchères de 100% des quotas carbone européens.", repercussions: "Décarbonation de 80% de la sidérurgie nationale d'ici 2032 tout en préservant l'emploi industriel." },
+            { id: "nrj-10", cat: "energie", titre: "Tarification Progressive et Vitale de l'Eau", postulat: "Le dérèglement du cycle de l'eau impose de garantir l'accès de base et de stopper le gaspillage.", action: "Gratuité absolue des premiers m3 d'usage vital; tarification fortement progressive au-delà pour les usages futiles.", financement: "Neutre pour le budget de l'État (péréquation interne des régies d'eau autonomes).", repercussions: "Baisse de 20% des prélèvements superflus; sécurisation de la ressource en période de sécheresse." },
+            { id: "nrj-11", cat: "energie", titre: "Moratoire sur les Data Centers Géants", postulat: "Le numérique consomme une part démesurée d'électricité décarbonée au détriment des besoins physiques vitaux.", action: "Gel de tout nouveau centre de données > 5MW; obligation de récupération de chaleur fatale pour les réseaux urbains.", financement: "Économie d'opportunité de raccordement réseau de 1,5Md€ pour le gestionnaire d'infrastructure (RTE).", repercussions: "Préservation de la puissance de base électrique pour l'électrification des trains et des usines." },
+            { id: "nrj-12", cat: "energie", titre: "Service Civil de Résilience Écologique", postulat: "L'adaptation du pays nécessite une immense force d'action humaine pour des travaux non rentables.", action: "Service obligatoire de 9 mois pour tous les jeunes de 18 à 25 ans dédié à la restauration des milieux naturels.", financement: "3,8Md€/an (hébergement, solde), financés par une taxation accrue des successions > 2M€.", repercussions: "Cohésion nationale renforcée; chantiers d'envergure réalisés (reforestation, entretien des digues)." },
+            { id: "nrj-13", cat: "energie", titre: "Obsolescence Garantie 10 ans et Réparabilité", postulat: "La destruction programmée des objets manufacturés pille les ressources géologiques.", action: "Extension légale de la garantie à 10 ans pour le gros électroménager; taxe de 150% si pièces non disponibles sous 48h.", financement: "700M€/an de recettes initiales, décroissantes au fur et à mesure de l'adaptation de l'industrie.", repercussions: "Relance massive de l'artisanat local de réparation; baisse drastique des déchets électroniques." },
+            { id: "nrj-14", cat: "energie", titre: "Plan National de Dé-asphaltage", postulat: "La bétonisation accélère l'érosion des sols et détruit la résilience hydrologique face aux inondations.", action: "Gel de toute nouvelle artificialisation; rachat public de zones commerciales obsolètes pour ré-ensauvagement.", financement: "2,2Md€/an, financés par l'arrêt total des nouveaux projets d'autoroutes et d'infrastructures routières.", repercussions: "Restauration des nappes et zones humides; amélioration de la résilience aux inondations cévenoles." },
+            { id: "nrj-15", cat: "energie", titre: "Sortie du Marché Européen de l'Électricité", postulat: "Fixer le prix de notre électricité décarbonée sur le coût du gaz fossile importé ruine les ménages.", action: "Rétablissement de tarifs réglementés basés uniquement sur les coûts de production historiques réels français.", financement: "Économie nette de 12Md€/an pour l'État en supprimant le bouclier tarifaire d'urgence.", repercussions: "Avantage compétitif industriel majeur; baisse immédiate des factures d'électricité des ménages de 40%." },
+
+            // GEOPOLITIQUE (15 mesures)
+            { id: "geo-01", cat: "geopolitique", titre: "Retrait du Commandement Intégré de l'OTAN", postulat: "La France ne doit pas être entraînée automatiquement dans des guerres d'alliances ou de blocs impériaux.", action: "Sortie des structures militaires intégrées tout en restant signataire politique du traité fondateur (position de 1966).", financement: "Économie nette de 900M€/an de frais de structure et d'interopérabilité technologique.", repercussions: "Restauration de la voix libre et non alignée de la France à l'ONU et auprès du Sud Global." },
+            { id: "geo-02", cat: "geopolitique", titre: "Conférence de Paix Permanente Proche-Orient", postulat: "La stabilité internationale s'effondre face au double standard juridique de l'Occident.", action: "Initiative française pour une conférence permanente sous égide ONU exigeant la solution à deux États (frontières 1967).", financement: "50M€ de budget diplomatique opérationnel de crise.", repercussions: "Repositionnement moral de la France comme puissance médiatrice d'équilibre et de droit international." },
+            { id: "geo-03", cat: "geopolitique", titre: "Réorientation de l'Armée vers la Protection Civile", postulat: "Les menaces physiques climatiques (incendies, inondations) sont plus destructrices que les invasions armées.", action: "Fléchage des budgets d'équipements lourds vers les flottes de Canadairs, le génie de crise et le sauvetage.", financement: "Redéploiement interne de 4,2Md€/an au sein de la Loi de Programmation Militaire (sans surcoût net).", repercussions: "Capacité autonome de l'État à sécuriser le territoire national face aux mégafeux et submersions." },
+            { id: "geo-04", cat: "geopolitique", titre: "Nationalisation de l'Actionnariat d'Armement", postulat: "L'indépendance de la défense est compromise par la présence de capitaux spéculatifs étrangers dans nos usines.", action: "Rachat obligatoire par l'État de 100% des parts d'entreprises stratégiques (Dassault, Thales, Naval Group).", financement: "6,5Md€ d'acquisition d'actifs (comptabilisé en investissement patrimonial, pas en déficit).", repercussions: "Absence totale de véto technologique ou de porte dérobée étrangère dans notre matériel militaire." },
+            { id: "geo-05", cat: "geopolitique", titre: "Limitation Démocratique du Veto à l'ONU", postulat: "La paralysie du Conseil de Sécurité discrédite le multilatéralisme face aux massacres de populations.", action: "Proposition officielle de suspendre le droit de veto en cas de crimes de guerre flagrants validés par l'Assemblée Générale.", financement: "Neutre.", repercussions: "Pression morale immense sur les membres permanents; retour de l'ONU au cœur de la résolution pacifique." },
+            { id: "geo-06", cat: "geopolitique", titre: "Fonds de Co-développement Euro-Méditerranéen", postulat: "La stabilité du bassin méditerranéen découle directement de la dégradation hydrologique et agraire.", action: "Partenariats de transferts de technologies non marchandes sur le traitement de l'eau et la lutte contre le désert.", financement: "3Md€/an, financés par la suppression des aides au développement classiques fléchées vers la corruption.", repercussions: "Baisse structurelle des flux migratoires de détresse en fixant les populations sur des sols fertiles." },
+            { id: "geo-07", cat: "geopolitique", titre: "Suspension des Accords de Libre-Échange", postulat: "Importer sans douane des produits fabriqués sans normes détruit l'économie locale et notre souveraineté.", action: "Suspension unilatérale des traités CETA et Mercosur; application de clauses miroirs écologiques douanières.", financement: "Génération de 2,4Md€/an de droits de douane protecteurs réinjectés dans l'agriculture locale.", repercussions: "Relocalisation de l'appareil de production agroalimentaire; protection effective de la paysannerie." },
+            { id: "geo-08", cat: "geopolitique", titre: "Dédollarisation des Transactions Souveraines", postulat: "L'extraterritorialité du droit américain s'appuie sur le dollar pour bloquer nos entreprises souveraines.", action: "Obligation d'utiliser exclusivement l'euro ou des accords bilatéraux monétaires pour les matières critiques.", financement: "Neutre; protection des banques françaises contre les amendes arbitraires américaines.", repercussions: "Immunisation juridique totale des échanges extérieurs français d'intérêt vital." },
+            { id: "geo-09", cat: "geopolitique", titre: "Sanctuarisation de la Dissuasion Nucléaire Nationale", postulat: "Notre dissuasion est l'assurance-vie ultime de la France. Elle ne doit pas être diluée dans l'Europe.", action: "Refus de tout partage de commandement nucléaire; indépendance complète préservée face à l'OTAN et l'UE.", financement: "Neutre (maintien de la trajectoire budgétaire interne d'entretien de la dissuasion).", repercussions: "Maintien de l'autonomie stratégique suprême de la France en situation de guerre globale." },
+            { id: "geo-10", cat: "geopolitique", titre: "Retrait des Forces Militaires Permanentes en Afrique", postulat: "La présence militaire permanente alimente le sentiment post-colonialiste et cible l'hostilité populaire.", action: "Fermeture programmée de toutes les bases permanentes en Afrique; remplacement par des formations techniques à la demande.", financement: "Économie nette de 1,8Md€/an de frais de projection et d'entretien des bases hors sol.", repercussions: "Normalisation pacifique de nos rapports souverains avec l'Afrique; recentrage sur les territoires nationaux." },
+            { id: "geo-11", cat: "geopolitique", titre: "Réfugiés Climatiques à l'ONU", postulat: "La convention de Genève de 1951 ne couvre pas l'exode physique lié à l'inhabitabilité de la Terre.", action: "Initiative internationale pour inscrire un statut de protection pour les personnes dont la terre d'origine a disparu.", financement: "Neutre.", repercussions: "Prise en charge ordonnée, planifiée et solidaire des vagues d'exode physique inéluctables." },
+            { id: "geo-12", cat: "geopolitique", titre: "Constitution de Stocks Stratégiques de Métaux", postulat: "La transition sobre nécessite des matériaux critiques dont l'accès physique mondial se resserre.", action: "Constitution de 5 ans de stock physique d'État en cuivre, nickel, cobalt, zinc et silicium.", financement: "3,5Md€ financés par émission d'obligations de résilience d'État à long terme.", repercussions: "Immunité complète des filières de réparation et de transports ferroviaires contre les blocus maritimes." },
+            { id: "geo-13", cat: "geopolitique", titre: "Alliance Spatiale Civile et Libre", postulat: "L'espace se privatise au profit d'intérêts de surveillance commerciale et de contrôle militaire.", action: "Lancement d'une constellation publique partagée de satellites d'observation climat en Open Data.", financement: "400M€/an réorientés des programmes de vols habités lointains et d'exploration non prioritaire du CNES.", repercussions: "Indépendance des données de surveillance environnementale vis-à-vis des milliardaires de la Tech américaine." },
+            { id: "geo-14", cat: "geopolitique", titre: "Francophonie Low-Tech", postulat: "L'influence française doit s'articuler autour de solidarités physiques concrètes, pas seulement linguistiques.", action: "Plateforme internationale de partage gratuit de brevets low-tech: irrigation, machines-outils réparables.", financement: "150M€/an opérés par le ministère des Affaires Étrangères.", repercussions: "Création d'un contre-modèle de codéveloppement technique face à l'endettement technologique imposé par la Chine." },
+            { id: "geo-15", cat: "geopolitique", titre: "Clause Constitutionnelle de Sauvegarde Verte", postulat: "Le droit commercial européen et international bloque régulièrement les nationalisations de transition.", action: "Inscription constitutionnelle de la primauté des lois de planification et de préservation biophysique sur le droit commercial.", financement: "Neutre; protection de l'État contre les procès d'investisseurs privés ou arbitrages OMC.", repercussions: "Libération complète de l'action de l'État souverain pour organiser le bien commun." },
+
+            // ECONOMIE (15 mesures)
+            { id: "eco-01", cat: "economie", titre: "Remplacement du PIB par l'IRB", postulat: "Le PIB mesure la frénésie de transformation monétaire mais pas l'état physique réel de la nation.", action: "L'Indicateur de Résilience Biophysique (IRB) devient l'indice d'évaluation de la loi de finances.", financement: "Neutre (réorganisation de l'INSEE).", repercussions: "Fin de la course au PIB; arbitrage des dépenses publiques indexé sur la préservation du carbone, de la santé et des sols." },
+            { id: "eco-02", cat: "economie", titre: "Impôt sur la Fortune Matérielle", postulat: "La richesse monétaire se convertit toujours en ponction physique de métaux, d'espace et d'énergie.", action: "Calcul de l'IFI remplacé par l'IFM: taxation sur la masse cumulée des biens possédés (m2 secondaires, poids auto).", financement: "Recettes de 8,5Md€/an prélevées sur la consommation ultra-énergivore de luxe.", repercussions: "Désincitation radicale à la possession accumulative; redirection de l'épargne vers le financement sobre." },
+            { id: "eco-03", cat: "economie", titre: "Comptabilité Carbone Double Obligatoire", postulat: "Une entreprise dégageant des dividendes mais détruisant les écosystèmes est en faillite physique réelle.", action: "Obligation de l'exercice d'un double bilan annuel en Euros et en Kg de CO2.", financement: "Coût de contrôle de 200M€/an (création d'un corps d'inspecteurs de la planification carbone).", repercussions: "Fin du greenwashing; le versement des dividendes est de fait bloqué si la trajectoire carbone physique de l'entreprise dévie." },
+            { id: "eco-04", cat: "economie", titre: "Revenu de Résilience en Monnaie Locale", postulat: "La contraction énergétique détruira des emplois marchands carbonés; il faut sécuriser la subsistance populaire.", action: "Versement mensuel de 300€ sous forme de monnaie numérique locale, non cumulable, pour l'alimentation bio locale.", financement: "18Md€/an, entièrement financés par un impôt progressif ciblé sur les superprofits spéculatifs.", repercussions: "Dignité alimentaire garantie; création d'un débouché stable exclusif pour la paysannerie française." },
+            { id: "eco-05", cat: "economie", titre: "Plafonnement des Salaires de 1 à 10", postulat: "Dans un monde fini, les écarts indécents de richesse minent la cohésion et incitent au gaspillage.", action: "Plafonnement légal obligatoire des écarts de rémunération de 1 à 10 dans toutes les entreprises du pays.", financement: "Coût de fonctionnement neutre; économie de régulation des conflits sociaux.", repercussions: "Restauration du pacte républicain d'utilité; revalorisation naturelle des métiers indispensables de la base." },
+            { id: "eco-06", cat: "economie", titre: "TVA Différentielle Éco-Réparable", postulat: "Le prix du marché actuel ne valorise pas l'effort de réparation locale face au jetable importé au charbon.", action: "TVA à 0% sur les artisans réparateurs et pièces détachées; TVA à 50% sur la fast-fashion et le jetable.", financement: "Opération positive pour l'État: gain net de 1,2Md€/an de recettes de TVA différenciée.", repercussions: "La réparation devient systématiquement moins chère que l'achat d'un objet neuf." },
+            { id: "eco-07", cat: "economie", titre: "Bannissement du Trading Haute Fréquence", postulat: "Les algorithmes boursiers spéculatifs créent des hausses de prix artificielles sur les matières premières.", action: "Interdiction du trading haute fréquence; détention minimale obligatoire de 30 jours pour tout actif matières premières.", financement: "Neutre sur le budget de fonctionnement réel; stabilisation structurelle.", repercussions: "Fin de l'inflation spéculative sur le chauffage et l'alimentation populaire." },
+            { id: "eco-08", cat: "economie", titre: "Banque de Résilience et de Transition", postulat: "Le secteur bancaire privé oriente ses investissements vers les fossiles car le rendement y est plus rapide.", action: "Monopole public du crédit pour la transition; interdiction d'investir dans des projets augmentant la demande d'énergie.", financement: "Nationalisation technique (Bpifrance et Banque Postale); allocation de 30% des encours du Livret A.", repercussions: "Orientation stricte de l'épargne des Français vers l'économie biophysique réelle." },
+            { id: "eco-09", cat: "economie", titre: "Plan de Reconversion des Secteurs Carbonés", postulat: "La fin programmée de secteurs polluants (aviation civile, marketing) exige une transition humaine juste.", action: "Garantie de maintien à 100% du salaire net pendant 24 mois pour reconversion vers les métiers en tension (isolation, rail).", financement: "6Md€/an d'indemnisations de formation, financés par la taxe sur l'obsolescence et économies ministérielles.", repercussions: "Zéro chômage de transition; insertion pacifiée des compétences tertiaires dans l'économie utile." },
+            { id: "eco-10", cat: "economie", titre: "Dotation d'Activité d'Intérêt Général", postulat: "Donner du capital monétaire à un créateur ne garantit pas la viabilité d'un projet dans un monde sobre.", action: "Attribution d'un quota carbone initial gratuit et d'un accès aux ateliers publics partagés (FabLabs d'État).", financement: "800M€/an de mise à disposition de locaux publics vacants.", repercussions: "Éclosion de milliers de TPE artisanales et de recyclage viables dès le départ." },
+            { id: "eco-11", cat: "economie", titre: "Majoration Progressive Taxe Foncière", postulat: "La multi-propriété spéculative concentre l'usage du béton et ferme l'accès au logement.", action: "Majoration automatique de la taxe foncière dès le deuxième bien possédé (+50% à +400% au-delà du troisième).", financement: "4,7Md€/an de rentrées fiscales destinées aux budgets municipaux de logement social.", repercussions: "Chute des prix de l'immobilier spéculatif; accès facilité pour les jeunes primo-accédants." },
+            { id: "eco-12", cat: "economie", titre: "Fléchage Citoyen de l'Épargne Dormante", postulat: "Le patrimoine financier des banques est déconnecté des réalités matérielles territoriales.", action: "Obligation de flécher 15% des dépôts bancaires au-delà de 20 000€ vers des obligations de grands chantiers publics.", financement: "Neutre (création d’une dette souveraine d’actifs physiques rémunérée à un taux garanti de 3%).", repercussions: "Indépendance financière complète du pays face aux marchés financiers internationaux spéculatifs." },
+            { id: "eco-13", cat: "economie", titre: "Semaine de 28h (4 jours)", postulat: "La décrue énergétique réduit la productivité par machine. Pour préserver l’emploi, il faut partager le travail.", action: "Semaine de 4 jours généralisée contre engagement ferme de maintien de 100% des effectifs de l’entreprise.", financement: "Exonérations ciblées de 6,2Md€ pour les entreprises jouant le jeu, compensées par la baisse du chômage.", repercussions: "Temps de vie libéré pour l’auto-production (potagers, réparations) ; diminution de l’épuisement au travail." },
+            { id: "eco-14", cat: "economie", titre: "Recherche Publique sous Licence Libre", postulat: "L’argent public de recherche ne doit pas générer des monopoles de brevets privés bloquants.", action: "Conditionnement de 100% de l’aide publique d’innovation au versement des résultats dans le domaine libre ouvert.", financement: "Neutre.", repercussions: "Accélération industrielle collaborative de la transition ; fin des rentes de propriété intellectuelle." },
+            { id: "eco-15", cat: "economie", titre: "Taxe Anti-Délocalisation d’Énergie Grise", postulat: "Importer du charbon délocalisé pour contourner les règles biophysiques françaises est une tricherie climatique.", action: "Taxe douanière proportionnelle à l’empreinte carbone et à l’absence de mix décarboné dans l’usine de production d’origine.", financement: "3,8Md€/an de taxes douanières supplémentaires.", repercussions: "Relocalisation immédiate des industries de transformation mécanique et métallurgique sur notre sol." },
+
+            // INSTITUTIONS (15 mesures)
+            { id: "ins-01", cat: "institutions", titre: "Enseignement des Sciences Cognitives", postulat: "Le cerveau humain réagit à l’immédiateté, pas aux dynamiques lentes systémiques des limites physiques.", action: "Introduction dès le collège de cours obligatoires de décryptage des biais, de l’attention et de l’esprit critique.", financement: "150M€ de budget annuel de formation des enseignants et d’élaboration des manuels.", repercussions: "Population immunisée contre la manipulation publicitaire, les théories du complot et le déni climatique." },
+            { id: "ins-02", cat: "institutions", titre: "Démantèlement des Monopoles de Presse", postulat: "Les monopoles de médias privés par des industriels subordonnés à l’État faussent la délibération démocratique.", action: "Interdiction de détenir > 5% d’un média politique si l’entreprise bénéficie de marchés publics ou d’intérêts fossiles.", financement: "Neutre (simple régulation de l’actionnariat).", repercussions: "Libération du débat public ; émergence d’enquêtes journalistiques objectives sur la décroissance matérielle." },
+            { id: "ins-03", cat: "institutions", titre: "Sénat Citoyen Tiré au Sort", postulat: "La logique électorale de court terme interdit aux politiciens de voter des lois de résilience sur 20 ans.", action: "Remplacement du Sénat par une chambre de 300 citoyens tirés au sort pour des mandats de 3 ans non renouvelables.", financement: "Économie nette de 120M€/an sur les frais de fonctionnement et de pension par rapport au Sénat actuel.", repercussions: "Introduction officielle de la défense des intérêts intergénérationnels et du temps long dans les textes législatifs." },
+            { id: "ins-04", cat: "institutions", titre: "Chèque Délibératif d’Information Citoyenne", postulat: "Le sensationnalisme addictif en ligne détruit l’attention collective pour capter la valeur publicitaire.", action: "Versement annuel de 50€ par citoyen à attribuer exclusivement aux médias d’information neutres sans pub.", financement: "2,5Md€/an, entièrement financés par la taxe sur la publicité énergivore.", repercussions: "Fin de l’addiction médiatique au clic ; émergence d’une presse de qualité scientifique stable." },
+            { id: "ins-05", cat: "institutions", titre: "Interdiction des Designs Attentionnels Captifs", postulat: "Le scroll infini et les notifications instantanées automatisées manipulent notre système dopaminergique.", action: "Bannissement de ces technologies pour les mineurs ; obligation de proposer un flux d’actualité chronologique neutre.", financement: "Neutre (application d'amendes de non-conformité de 10% du chiffre d’affaires mondial).", repercussions: "Regain d’attention libre pour la jeunesse ; diminution drastique des troubles du sommeil et de l’attention." },
+            { id: "ins-06", cat: "institutions", titre: "Évaluation Scolaire Coordonnée", postulat: "Le classement individuel permanent prépare à une société compétitive hostile peu résiliente.", action: "Projets de groupe, apprentissage par tutorat et validation collective des cycles primaires et secondaires.", financement: "Neutre (adaptation pédagogique de l’Éducation Nationale).", repercussions: "Esprit de solidarité développé dès le plus jeune âge ; chute massive du décrochage scolaire." },
+            { id: "ins-07", cat: "institutions", titre: "Formation Thermodynamique des Décideurs", postulat: "Les hauts fonctionnaires souffrent de biais d’analyse purement financiers, ignorant la physique de l’énergie.", action: "Cursus obligatoire de 120h sur les limites biophysiques et les biais décisionnels pour accéder à la haute direction.", financement: "45M€/an d’organisation des séminaires internes de l’INSP.", repercussions: "Fin des décisions ministérielles contradictoires ; planification rationnelle partagée de l’action publique." },
+            { id: "ins-08", cat: "institutions", titre: "Référendum d’Initiative Citoyenne Décisionnel", postulat: "L’apathie ou la colère stérile naît du sentiment de dépossession démocratique entre les élections.", action: "Un texte soutenu par 10% du corps électoral doit être soumis à référendum dans les 6 mois.", financement: "80M€ par scrutin national organisé par voie postale sécurisée et dans les mairies.", repercussions: "Responsabilisation des citoyens face aux grands choix collectifs nationaux." },
+            { id: "ins-09", cat: "institutions", titre: "Fin des Cabinets de Conseil Privés", postulat: "Confier la politique publique à des cabinets d’optimisation privés introduit des biais idéologiques marchands.", action: "Interdiction absolue de recourir à des prestataires de conseil privés pour la rédaction de textes et d’analyses publiques.", financement: "Économie budgétaire directe de 1,4 Md€/an pour les caisses de l’État.", repercussions: "Restauration de la souveraineté technique et morale des fonctionnaires de carrière publique." },
+            { id: "ins-10", cat: "institutions", titre: "Revalorisation des Enseignants de 30%", postulat: "L’école de la complexité requiert un corps enseignant hautement formé, valorisé et respecté.", action: "Hausse de 30% du salaire de base de tous les enseignants ; taille des classes limitée à 18 élèves maximum.", financement: "16,5Md€/an, entièrement financés par la suppression du Crédit Impôt Recherche détourné et des niches fiscales.", repercussions: "Retour de profils d’excellence vers les concours ; climat scolaire pacifié favorisant l’apprentissage réel." },
+            { id: "ins-11", cat: "institutions", titre: "Écoles Rurales d’Artisanat Low-Tech", postulat: "L’éducation académique classique méprise le travail manuel, pourtant vital pour l’adaptation.", action: "Création de pôles d’enseignement d’excellence professionnelle de la maçonnerie de terre, forge et menuiserie.", financement: "1,2Md€/an financés par la suppression des subventions publiques aux écoles privées de commerce hors-sol.", repercussions: "Savoir-faire manuels revalorisés ; revitalisation économique et technique de nos territoires ruraux." },
+            { id: "ins-12", cat: "institutions", titre: "Transparence Radicale de Parcoursup", postulat: "Les boîtes noires informatiques d’orientation détruisent la confiance des jeunes dans l’institution.", action: "Ouverture du code source de tri ; obligation d’un rapport individuel rédigé par un être humain pour chaque refus.", financement: "150M€/an pour financer les commissions académiques d’évaluation humaine.", repercussions: "Restauration du pacte républicain d’équité scolaire ; fin de l’angoisse algorithmique étudiante." },
+            { id: "ins-13", cat: "institutions", titre: "Maisons Communales de l’Esprit Critique", postulat: "La désinformation en ligne isole les esprits au sein de communautés closes irréconciliables.", action: "Création de tiers-lieux physiques de débat public gérés par des psychologues cognitifs et médiateurs scientifiques.", financement: "400M€/an financés par la taxation des espaces publicitaires énergivores.", repercussions: "Rapprochement intergénérationnel et social ; baisse de la radicalisation numérique et de l’isolement." },
+            { id: "ins-14", cat: "institutions", titre: "Délit de Falsification des Faits Scientifiques", postulat: "La liberté d’expression ne doit pas légitimer le mensonge délibéré visant à saboter les mesures de sauvegarde.", action: "Pénalisation de la publication volontaire de fausses données réfutées par les consensus académiques.", financement: "Neutre.", repercussions: "Assainissement éthique des interventions des lobbyistes et experts de plateaux de télévision." },
+            { id: "ins-15", cat: "institutions", titre: "Préservation Cognitive de la Petite Enfance", postulat: "L’exposition précoce aux écrans de loisir altère la formation de la concentration et de l’empathie.", action: "Interdiction de la vente de jouets connectés ou à écran pour les enfants de moins de 3 ans.", financement: "80M€/an d’inspections des douanes et de contrôles de marché.", repercussions: "Protection physique de la plasticité cérébrale de la future génération de citoyens." },
+
+            // SANTE (15 mesures)
+            { id: "san-01", cat: "sante", titre: "Remboursement Intégral de la Santé Mentale", postulat: "L’anxiété collective est une réponse rationnelle à la dégradation écologique, pas un trouble à sédater.", action: "Prise en charge à 100% des consultations de psychologues libéraux sans intermédiaire médical nécessaire.", financement: "2,2Md€/an financés par une taxe sur l’agroalimentaire ultra-transformé et les boissons sucrées.", repercussions: "Chute de 30% de l’usage des antidépresseurs en France ; prise en charge saine de la souffrance moderne." },
+            { id: "san-02", cat: "sante", titre: "Abrogation de la Tarification à l’Activité (T2A)", postulat: "Gérer l’hôpital public comme un commerce de codage d’actes détruit le soin et maltraite le personnel.", action: "Suppression de la T2A ; rétablissement d’une dotation globale annuelle fixe basée sur les besoins territoriaux réels.", financement: "Économie administrative de 400M€/an par la suppression de la bureaucratie de codage de facturation.", repercussions: "Fin de la course aux actes rentables ; retour du temps humain au chevet des patients." },
+            { id: "san-03", cat: "sante", titre: "Régulation de l’Installation Médicale", postulat: "La liberté totale d’installation crée une inégalité territoriale injuste pour l’accès aux soins de base.", action: "Obligation d’exercer les 5 premières années dans un désert médical conventionné pour tout médecin diplômé.", financement: "Neutre.", repercussions: "Éradication complète et définitive des déserts médicaux en France métropolitaine et outre-mer en 3 ans." },
+            { id: "san-04", cat: "sante", titre: "Pôle Public du Médicament Essentiel", postulat: "Les pénuries récurrentes de molécules simples découlent des délocalisations de firmes privées.", action: "Création d’une entreprise publique de pharmacie pour produire en France les 400 médicaments d’intérêt majeur.", financement: "3,2Md€ d’investissement industriel, financés par la contribution des réserves des mutuelles privées.", repercussions: "Sécurisation absolue de notre approvisionnement ; économies massives d’achat pour la Sécurité Sociale." },
+            { id: "san-05", cat: "sante", titre: "Fin des Financements Privés des Congrès Médicaux", postulat: "La formation médicale continue ne peut dépendre des intérêts marketing des firmes pharmaceutiques.", action: "Interdiction absolue des parrainages de laboratoires pour les congrès médicaux ; formation continue 100% universitaire publique.", financement: "250M€/an d’investissements publics compensés par le recours aux génériques moins onéreux.", repercussions: "Prescriptions médicales rationnelles, indépendantes de l’influence de l’industrie du médicament." },
+            { id: "san-06", cat: "sante", titre: "Plan 'PFAS, Glyphosate et Phtalates Zéro'", postulat: "La santé environnementale conditionne la santé des corps ; les polluants éternels saturent le vivant.", action: "Interdiction stricte de ces produits chimiques dans les contenants alimentaires et cosmétiques sous 12 mois.", financement: "80M€/an de contrôles, financés par des amendes administratives dissuasives.", repercussions: "Restauration de la qualité de vie cellulaire ; baisse à long terme des cancers et troubles hormonaux." },
+            { id: "san-07", cat: "sante", titre: "Revalorisation d’Urgence des Salaires de Base", postulat: "Il est impossible de soigner la population si les métiers hospitaliers essentiels fuient par paupérisation.", action: "Hausse immédiate de 25% du salaire net des aides-soignants, infirmiers, brancardiers et personnels techniques.", financement: "4,5Md€/an financés par la suppression des allègements de cotisations sur les très hauts salaires financiers.", repercussions: "Attractivité restaurée ; fin des démissions et fermeture de lits par manque d’effectif." },
+            { id: "san-08", cat: "sante", titre: "Cantines Scolaires 100% Bio et Régies Locales", postulat: "L’éducation alimentaire et la santé de nos enfants commencent par un approvisionnement sain de proximité.", action: "Remplacement des contrats des géants de la restauration par des régies communales de circuit court.", financement: "1,1Md€/an d’accompagnement de l’État aux petites communes pour installer des cuisines.", repercussions: "Disparition progressive de l’obésité infantile ; débouché économique stable garanti pour nos maraîchers locaux." },
+            { id: "san-09", cat: "sante", titre: "Gardes Hospitalières de 12h Maximum", postulat: "Faire travailler des internes ou soignants pendant 24h d’affilée détruit leurs capacités de jugement.", action: "Plafonnement légal des gardes consécutives à 12h ; repos obligatoire garanti sous peine de sanctions pénales des directions.", financement: "Financement inclus dans le plan d’attractivité et de recrutement général.", repercussions: "Sécurité thérapeutique accrue pour les patients ; amélioration de la santé physique et mentale des équipes médicales." },
+            { id: "san-10", cat: "sante", titre: "Diagnostic Communal de Résilience Canicule", postulat: "L’intensité des canicules à venir exige d’organiser des parcours de fraîcheur coordonnés de crise.", action: "Obligation pour chaque territoire d’élaborer une cartographie de mise à disposition d’îlots frais et de stocks d’eau.", financement: "150M€/an opérés par Santé Publique France.", repercussions: "Protection efficace de la population vulnérable ; réduction spectaculaire de la surmortalité estivale." },
+            { id: "san-11", cat: "sante", titre: "Moratoire sur la Télémédecine Commerciale", postulat: "La téléconsultation de confort déshumanise la clinique et multiplie les arrêts maladie de complaisance.", action: "Interdiction de l'accès aux arrêts de travail de > 48h en téléconsultation, sauf si géré par le médecin de famille.", financement: "Économie directe de 600M€/an pour l’Assurance Maladie par le contrôle des abus spéculatifs.", repercussions: "Recentrage des moyens de l’Assurance Maladie sur la consultation humaine réelle de proximité." },
+            { id: "san-12", cat: "sante", titre: "Priorisation de la Recherche sur la Santé Féminine", postulat: "La recherche médicale moderne souffre d’un biais androcentrique, négligeant les spécificités du corps des femmes.", action: "Fléchage de 40% des enveloppes de recherche de l’INSERM vers l’endométriose et les pathologies de genre.", financement: "Neutre (réallocation interne des priorités de recherche scientifique de l’État).", repercussions: "Temps de diagnostic de l’endométriose ramené de 7 ans à moins de 12 mois." },
+            { id: "san-13", cat: "sante", titre: "Brigades Sanitaires Mobiles de Prévention", postulat: "Attendre que les populations paupérisées tombent malade pour les soigner est une erreur d’efficacité publique.", action: "Déploiement d’équipes de soignants et éducateurs allant au-devant des habitants isolés.", financement: "800M€/an, entièrement financés par la suppression des campagnes télévisées nationales de communication.", repercussions: "Détection précoce des maladies de mode de vie ; désengorgement des urgences hospitalières de base." },
+            { id: "san-14", cat: "sante", titre: "Aménagement de Parcours Sportifs Publics", postulat: "L’inactivité physique cause des ravages métaboliques que les salles de fitness privées ne compensent pas.", action: "Fléchage du budget des sports vers la construction d’accès gratuits, d’aménagements cyclables et de piscines communales.", financement: "Réorientation du budget du ministère des Sports (fin des subventions aux stades professionnels marchands).", repercussions: "Amélioration générale du profil de santé métabolique de la population active." },
+            { id: "san-15", cat: "sante", titre: "Droit à la Fin de Vie Digne non Marchande", postulat: "L’accompagnement terminal des êtres humains ne doit jamais faire l’objet de profits de cliniques privées.", action: "Légalisation de l’aide active à mourir encadrée ; interdiction stricte de l’exploitation de soins palliatifs à but lucratif.", financement: "Neutre (financement public des lits de soins palliatifs via les économies sur les actes T2A).", repercussions: "Souveraineté éthique ultime préservée de l’individu ; fin de l’agonie humaine mercantiliste." },
+
+            // TRAVAIL (15 mesures)
+            { id: "tra-01", cat: "travail", titre: "Garantie de l’Emploi Utile", postulat: "Le chômage est une anomalie alors qu’un travail immense de transition rurale et d’isolation nous attend.", action: "L’État devient l’employeur de dernier ressort : poste de transition payé au SMIC proposé à tout chômeur de longue durée.", financement: "Coût net de 1,8 Md€/an (après déduction des allocations chômage et aides sociales économisées).", repercussions: "Élimination du chômage de détresse ; chantiers d’adaptation biophysique réalisés en urgence." },
+            { id: "tra-02", cat: "travail", titre: "Inversion Salaires en Faveur de la Pénibilité", postulat: "Notre économie surpaye la manipulation abstraite de symboles et sous-paye les métiers physiques indispensables.", action: "Majoration légale de 40% des SMIC conventionnels pour tous les métiers impliquant une pénibilité physique mesurable.", financement: "Pour l’État employeur : 1,2 Md€/an financés par le plafonnement des indemnités des cadres administratifs supérieurs.", repercussions: "Retour de la fierté sociale ; rééquilibrage de l’attraction professionnelle vers la production réelle." },
+            { id: "tra-03", cat: "travail", titre: "Gouvernance Coopérative Forcée", postulat: "Déléguer la finalité productive aux seuls actionnaires mène à fabriquer du superflu obsolète polluant.", action: "Obligation d’intégrer 50% de voix délibératives des représentants de salariés au sein des conseils d’administration.", financement: "Neutre.", repercussions: "Pouvoir de veto éthique et écologique des travailleurs sur les choix technologiques ou de production de leur entreprise." },
+            { id: "tra-04", cat: "travail", titre: "Interdiction du Travail de Nuit Économique", postulat: "Le fonctionnement continu logistique de nuit nuit à la santé biologique des salariés et surconsomme du courant.", action: "Interdiction du travail entre 22h et 6h, sauf services vitaux d’urgence, de train et hauts fourneaux.", financement: "Neutre (coût d’adaptation assumé par les plateformes de commerce de flux tendu).", repercussions: "Resynchronisation sociale ; réduction du taux d’accidents du travail graves nocturnes de 50%." },
+            { id: "tra-05", cat: "travail", titre: "Droit de Retrait Écologique des Salariés", postulat: "Un travailleur ne doit jamais être contraint légalement de saboter le vivant ou de tricher sur les normes carbone.", action: "Protection légale absolue des salariés refusant d’exécuter un ordre violant la loi environnementale.", financement: "Neutre.", repercussions: "Responsabilisation et garde-fou éthique par la base de l’appareil de production technique privé." },
+            { id: "tra-06", cat: "travail", titre: "Congé de Transition Paysanne Payé", postulat: "L’agroécologie nécessite de tripler le nombre de paysans ; beaucoup de citadins souhaitent s’installer sans capital.", action: "Droit à 12 mois de congé de transition payés à 85% par l’État pour apprentissage et installation agricole.", financement: "1,5Md€/an financés par la réorientation globale du budget actuel inefficace de formation continue managériale.", repercussions: "Installation de 40 000 nouveaux exploitants par an ; renouvellement générationnel de nos territoires." },
+            { id: "tra-07", cat: "travail", titre: "Conditionnement Strict des Aides Publiques", postulat: "Distribuer des aides publiques sans contrainte (CICE) enrichit l’actionnariat sans transformer le travail.", action: "Zéro allègement fiscal accordé si l’entreprise ne respecte pas l’écart 1-10 et une baisse de 5% de ses émissons.", financement: "Économie budgétaire directe massive de 14Md€/an pour l’État par l’arrêt des subventions aux entreprises polluantes.", repercussions: "Assainissement budgétaire public ; les capitaux publics soutiennent exclusivement la transition." },
+            { id: "tra-08", cat: "travail", titre: "Rapprochement Spatial Domicile-Travail", postulat: "Les longs trajets quotidiens en voiture solo constituent une aberration énergétique structurelle d’urbanisme.", action: "Prise en charge à 100% de l’indemnité transport uniquement si domicile < 20km ou recours au train d’État.", financement: "Coût privé pour les entreprises incitées à recruter localement ou à relocaliser de petits ateliers d’adaptation.", repercussions: "Décongestion périurbaine immédiate ; division par deux de la dépendance à l’automobile personnelle." },
+            { id: "tra-09", cat: "travail", titre: "Interdiction de la Surveillance Algorithmique", postulat: "La notation par algorithmes (Uber, Amazon) et la télésurveillance brisent l’autonomie et le respect mental.", action: "Interdiction d’évaluer, de punir ou de licencier sur la base exclusive de données d’un logiciel ou traceur.", financement: "Neutre (financé par le doublement des effectifs d’inspecteurs de l’Inspection du Travail).", repercussions: "Restauration de la dignité et du dialogue humain au sein des plateformes et bureaux modernes." },
+            { id: "tra-10", cat: "travail", titre: "Retraite Anticipée à 55 ans pour Pénibilité", postulat: "La mort en bonne santé des ouvriers survient beaucoup plus tôt que celle des cadres administratifs.", action: "Taux plein accessible dès 55 ans pour les métiers pénibles qualifiés ; retraite maintenue à 62 ans pour le sédentaire.", financement: "5,8Md€/an financés par le rendement global de l’Impôt sur la Fortune Matérielle.", repercussions: "Justice humaine biologique réelle ; libération d’opportunités de travail physique pour la jeunesse." },
+            { id: "tra-11", cat: "travail", titre: "Interdiction des Contrats Précaires Courts", postulat: "L’intérim à la journée maintient les travailleurs dans un statut de fragilité psychologique perpétuel.", action: "Interdiction des CDD d’une durée inférieure à un mois, sauf cas d’urgence de remplacement de maladie.", financement: "Économie de 900M€/an sur les frais d’indemnisation de compensation de précarité de Pôle Emploi.", repercussions: "Stabilisation de vie des précaires ; capacité des travailleurs à planifier leur vie locale d’entraide." },
+            { id: "tra-12", cat: "travail", titre: "Statut d’Artisan d’Intérêt National", postulat: "Les ateliers de proximité de réparation et recyclage manquent d’attractivité fiscale face à l’industrie du neuf.", action: "Exonération complète de charges patronales et IS pour les TPE de proximité de réparation de biens de base.", financement: "Manque à gagner de 400M€/an compensé par la baisse des tonnages de traitement des déchets municipaux.", repercussions: "Floraison de milliers d’ateliers de cordonnerie, d’électromécanique et de recyclerie sur le territoire." },
+            { id: "tra-13", cat: "travail", titre: "Temps de Formation Biophysique Salariée", postulat: "Les travailleurs doivent pouvoir concevoir la transition pratique de leurs propres machines.", action: "Octroi légal obligatoire de 12 jours de temps de travail payés par an pour formation de décarbonation d’atelier.", financement: "Coût interne pour les budgets de formation continue obligatoire des entreprises.", repercussions: "Transformation concrète, adaptative et rationnelle de l’outil industriel opérée par l’intelligence des ouvriers." },
+            { id: "tra-14", cat: "travail", titre: "Criminalisation du Management par Intimidation", postulat: "La souffrance éthique naît de consignes contradictoires forçant à dégrader la nature sous peine de renvoi.", action: "Assimilation pénale de pressions de direction incitant à masquer des pollutions ou risques à un délit de prison ferme.", financement: "Neutre.", repercussions: "Protection juridique complète des cadres éthiques ; fin de l’impunité des dirigeants de grands groupes." },
+            { id: "tra-15", cat: "travail", titre: "Coopératives Ouvrières de Démantèlement", postulat: "Fermer les raffineries ou usines de moteurs ne doit pas détruire les collectifs de travail ouvriers.", action: "Prise en charge par l’État de la reprise en SCOP de ces sites pour les convertir dans le recyclage de métaux.", financement: "Fonds d’amorçage de 2,8 Md€/an, entièrement financés par la taxe anti-délocalisation sur l’énergie grise.", repercussions: "Conservation du savoir-faire industriel français ; nettoyage physique propre de nos infrastructures obsolètes." },
+
+            // AGRICULTURE (15 mesures)
+            { id: "agr-01", cat: "agriculture", titre: "Plan d’Agroécologie sans Pétrole", postulat: "Notre alimentation est sous perfusion de tracteurs et d’intrants fossiles menacés d’interruption.", action: "Interdiction progressive des engrais chimiques ; subventions pour la traction légère animale et électrique.", financement: "4Md€/an entièrement réorientés depuis les subventions industrielles de la PAC.", repercussions: "Sols de nouveau fertiles ; garantie physique de sécurité alimentaire en cas de blocus de pétrole." },
+            { id: "agr-02", cat: "agriculture", titre: "Sécurité Sociale de l’Alimentation", postulat: "L’accès à la nourriture biologique saine est un droit de santé vital inaccessible pour les plus modestes.", action: "Attribution de 150€/mois sur carte vitale alimentaire utilisable exclusivement pour des denrées de régie agroécologique.", financement: "10Md€/an financés par une taxation progressive sur les hauts patrimoines financiers et l’IS.", repercussions: "Disparition de la malbouffe ; débouché économique souverain stable garanti pour nos agriculteurs." },
+            { id: "agr-03", cat: "agriculture", titre: "Moratoire Généralisé sur les 'Méga-Bassines'", postulat: "Stocker l’eau de nappe en extérieur ouvert évapore la ressource au bénéfice d’exportations de maïs.", action: "Gel de tout projet de stockage géant ; obligation de transition vers des semences adaptées à la sécheresse.", financement: "Économie publique directe de 150M€/an de subventions d’infrastructures annulées.", repercussions: "Niveau des nappes restauré ; pacification des conflits d’eau ruraux récents." },
+            { id: "agr-04", cat: "agriculture", titre: "Libération des Semences Paysannes", postulat: "Les brevets industriels stériles sur le vivant détruisent l’autonomie et l’adaptation de notre paysannerie.", action: "Abrogation de toute restriction d’échange de semences traditionnelles libres ; création d’un conservatoire ouvert.", financement: "40M€/an de fonctionnement de la structure de certification de libre accès.", repercussions: "Adaptabilité naturelle de nos cultures face au dérèglement thermique ; autonomie totale en semences." },
+            { id: "agr-05", cat: "agriculture", titre: "Interdiction des 'Fermes-Usines' Hors-Sol", postulat: "L’élevage industriel confiné importe des millions de tonnes de soja déforesté et favorise l’antibiorésistance.", action: "Plafonnement de la taille des exploitations (max 100 vaches, 500 porcs, 5 000 volailles) ; soutien au pastoralisme.", financement: "600M€/an d’aides au démantèlement, financés par une taxe sur les abattoirs industriels.", repercussions: "Disparition des algues vertes ; bien-être animal respecté ; élevage équilibré d’azote organique." },
+            { id: "agr-06", cat: "agriculture", titre: "Baisse de 50% de la Production Carnée", postulat: "Élever des bêtes pour se nourrir consomme dix fois plus de terres arables que de consommer les plantes directement.", action: "Taxe de transition sur la viande industrielle ; soutien massif au développement de protéines de légumes secs.", financement: "Neutre (la taxe sur la viande carbonée finance la relance de la culture nationale de lentilles).", repercussions: "Libération de 30% des terres cultivables françaises pour le maraîchage direct ; baisse des gaz à effet de serre." },
+            { id: "agr-07", cat: "agriculture", titre: "Ceintures Vertes Maraîchères Urbaines", postulat: "Les agglomérations françaises sont en flux tendu extrême avec moins de 3 jours d’autonomie alimentaire physique.", action: "Réquisition d’utilité publique des terres périphériques incultes pour y bâtir des maraîchages municipaux.", financement: "1,2 Md€/an d’acquisitions foncières financés par la taxe sur la spéculation immobilière foncière.", repercussions: "Villes résilientes en approvisionnement frais de base ; fin de la dépendance à la logistique routière." },
+            { id: "agr-08", cat: "agriculture", titre: "Statut National de 'Fermier d’État'", postulat: "La moitié des exploitants part à la retraite sous 5 ans ; la terre s’industrialise par manque de repreneurs.", action: "Fonctionnarisation des terres délaissées : l’État salarie de jeunes paysans pour produire l'alimentation de base.", financement: "1,5Md€/an (salaire, logistique) financés par l’arrêt de la niche fiscale sur le gazole agricole industriel.", repercussions: "Rajeunissement rural immédiat ; souveraineté alimentaire d’intérêt général planifiée." },
+            { id: "agr-09", cat: "agriculture", titre: "Prix Planchers Paysans Obligatoires", postulat: "Les centrales d’achat forcent les paysans à vendre sous leur coût, provoquant des drames réguliers.", action: "Loi interdisant d’acheter une denrée agricole sous son coût, incluant la garantie de deux SMIC pour l’exploitant.", financement: "Neutre (régulation directe des marges d’intermédiaires des centrales de la grande distribution).", repercussions: "Fin de la pauvreté rurale ; attractivité retrouvée des métiers de la terre pour les jeunes générations." },
+            { id: "agr-10", cat: "agriculture", titre: "Blocage Douanier Déforestation", postulat: "Sous-traiter notre destruction écologique en important du soja OGM détruit la légitimité de notre pays.", action: "Interdiction de toute importation agroalimentaire ayant causé la destruction de forêts primaires mondiales.", financement: "40M€/an d’inspections douanières physiques renforcées.", repercussions: "Fin de l’alimentation animale à base de soja importé ; relocalisation de la culture de luzerne en France." },
+            { id: "agr-11", cat: "agriculture", titre: "Épargne Foncière de la SAFER", postulat: "Le capital financier privé pousse à l’artificialisation commerciale des terres de grande qualité.", action: "Création d’un livret public garanti pour acheter et sanctuariser définitivement la terre agricole.", financement: "Opération patrimoniale de collecte d’épargne citoyenne stable garantie à 2,5%.", repercussions: "Sanctuarisation à vie du foncier agricole nourricier de la nation." },
+            { id: "agr-12", cat: "agriculture", titre: "Rotation Longue Agroécologique", postulat: "La monoculture intensive de maïs détruit l’humus biologique et impose toujours plus de chimie.", action: "Conditionnement des droits de culture à l’utilisation d’au moins 5 cultures tournantes sur un cycle de 7 ans.", financement: "Neutre.", repercussions: "Disparition naturelle des besoins d’insecticides et de fertilisants ; sols sains et vivants." },
+            { id: "agr-13", cat: "agriculture", titre: "Interdiction des Néonicotinoïdes", postulat: "La effondrement des abeilles et insectes pollinisateurs condamne la survie future de l’arboriculture.", action: "Retrait immédiat du marché de l’ensemble des molécules tueuses d’insectes, sans aucun report.", financement: "Fonds d’accompagnement de 200M€ pour aider la transition de la filière sucrière.", repercussions: "Protection effective des pollinisateurs vitaux ; retour de la biodiversité entomologique." },
+            { id: "agr-14", cat: "agriculture", titre: "Réserves Alimentaires de 6 Mois", postulat: "Les vannes logistiques routières s’interrompent à la moindre panne d’approvisionnement électrique.", action: "Silots départementaux d’État stockant céréales et légumineuses sèches correspondant à 180 jours de vie locale.", financement: "1,1 Md€ d’investissements, financés par la taxe carbone sur les superprofits pétroliers.", repercussions: "La population est immunisée physiquement contre tout blocus, guerre extérieure ou crise logistique." },
+            { id: "agr-15", cat: "agriculture", titre: "Éco-Score Biophysique Obligatoire", postulat: "La multiplicité des labels publicitaires commerciaux sature notre attention et valide le greenwashing.", action: "Interdiction de labels privés non scientifiques ; affichage d’une note unique calculée par l’ADEME.", financement: "30M€ de budget annuel d’études scientifiques et d’inspection pour l’ADEME.", repercussions: "Architecture des choix simplifiée pour les ménages ; avantage compétitif clair à la sobriété réelle." },
+
+            // NUMERIQUE (15 mesures)
+            { id: "num-01", cat: "numerique", titre: "Taxe Poids-Écran Électronique", postulat: "La majorité de l’impact biophysique des technologies réside dans l’extraction des métaux des écrans.", action: "Taxe de 250€ sur tout smartphone neuf > 5,5 pouces ou ayant un indice de réparabilité < 8/10.", financement: "Recettes de 1,4 Md€/an, réinjectées dans les bourses d’ateliers de reconditionnement d’État.", repercussions: "Arrêt de la course consumériste au remplacement technologique permanent ; essor du réparé local." },
+            { id: "num-02", cat: "numerique", titre: "Souveraineté Administrative Libre", postulat: "Déléguer nos logiciels d’État à des monopoles américains crée une dépendance géopolitique inadmissible.", action: "Interdiction absolue des systèmes propriétaires (Windows, MacOS) ; passage de l’État sous Linux libre.", financement: "Investissement de 600M€ la première année ; économie de 900M€/an de licences privées.", repercussions: "Indépendance nationale logicielle totale ; sécurité décuplée contre les virus et chantages." },
+            { id: "num-03", cat: "numerique", titre: "Moratoire Réseau Mobile et Fusion", postulat: "La 5G avancée et la 6G créent des usages inutiles saturant l’alimentation électrique nationale.", action: "Gel de tout déploiement de réseau supérieur à la 5G actuelle ; fusion des antennes en un réseau public.", financement: "Économie de 3,5 Md€/an d’investissements doublés futiles pour les opérateurs.", repercussions: "Consommation électrique réseau stabilisée ; fin du renouvellement forcé des téléphones." },
+            { id: "num-04", cat: "numerique", titre: "Rapatriement des Données de Santé", postulat: "Stocker les données de santé des Français sur des serveurs étrangers enfreint notre sécurité souveraine.", action: "Fin de l’usage des clouds privés étrangers ; installation de centres de données d’État refroidis par eau de mer.", financement: "800M€ de coût de construction d’infrastructures physiques souveraines.", repercussions: "Confidentialité absolue du dossier médical ; sécurité physique totale de la donnée nationale." },
+            { id: "num-05", cat: "numerique", titre: "Quota de Forfait Données Mobiles", postulat: "L’accès illimité pousse à la saturation des réseaux par du streaming de confort exigeant du matériel lourd.", action: "Plafonnement des forfaits standard à 20 Go par mois ; débit bridé au-delà pour les urgences.", financement: "Neutre.", repercussions: "Consommation réseau divisée par trois ; prolongation de l’usage des antennes existantes." },
+            { id: "num-06", cat: "numerique", titre: "Extinction Nocturne des Serveurs Pro", postulat: "L’accès permanent professionnel crée une surcharge d’anxiété et de travail caché qui nuit à la santé.", action: "Obligation de couper les serveurs de courriels d’entreprise de 20h à 7h et les week-ends.", financement: "Économie électrique ; diminution des frais médicaux d’épuisement professionnel (Assurance Maladie).", repercussions: "Repos mental des salariés garanti ; rétablissement d’une vraie séparation de vie." },
+            { id: "num-07", cat: "numerique", titre: "Interdiction des Crypto-monnaies", postulat: "Le Bitcoin et les cryptomonnaies Proof-of-Work gaspillent l’électricité pour de la spéculation virtuelle.", action: "Bannissement strict du minage, commerce et détention de crypto-actifs énergivores en France.", financement: "Neutre.", repercussions: "Libération instantanée de puissance électrique utile pour l’électrification du transport lourd." },
+            { id: "num-08", cat: "numerique", titre: "Éco-Conception de Code", postulat: "Les pages internet actuelles sont inutilement lourdes, chargées de traceurs et de publicités.", action: "Fixation d’un standard de poids maximum en Ko pour les pages internet publiques et marchandes.", financement: "150M€ d’accompagnement technique pour les sites internet des TPE/PME.", repercussions: "Réseau accessible même sur ordinateurs anciens ; prolongation de la flotte informatique." },
+            { id: "num-09", cat: "numerique", titre: "Cadrage de l’IA Générative", postulat: "Interroger des serveurs d’IA pour des futilités de divertissement consomme trop d’eau et de métaux rares.", action: "Interdiction de l’accès grand public publicitaire ; usage réservé à la recherche médicale publique.", financement: "Neutre.", repercussions: "Évitement d’une dérive énergétique technologique ; protection du statut des créateurs." },
+            { id: "num-10", cat: "numerique", titre: "Filière de Reconditionnement Public", postulat: "Les flottes d’ordinateurs réformées partent vers des décharges polluantes à l’étranger.", action: "Obligation de céder tout matériel réformé à une régie publique pour équipement des écoles.", financement: "350M€/an de frais de gestion, compensés par l’absence d'achats de matériel neuf.", repercussions: "Fracture numérique scolaire éliminée ; économie importante de métaux rares importés." },
+            { id: "num-11", cat: "numerique", titre: "Interdiction du Wi-Fi sur l’Électroménager", postulat: "Connecter un frigo ou une brosse à dents engendre une pression de puces sans utilité.", action: "Interdiction de mise sur le marché d’appareils ménagers intégrant des puces réseau superflues.", financement: "Neutre.", repercussions: "Économie de composants électroniques rares ; diminution de la surface d’attaque cyber." },
+            { id: "num-12", cat: "numerique", titre: "Sac à Dos Écologique Obligatoire", postulat: "Le consommateur ignore l’effort physique matériel exigé pour fabriquer un produit léger propre.", action: "Impression obligatoire sur la boîte du poids de roche détruite pour la fabrication (ex: '1,5t pour ce PC').", financement: "Neutre.", repercussions: "Choc mental incitant à la conservation physique longue durée de l’appareil." },
+            { id: "num-13", cat: "numerique", titre: "Pénalisation des Designs Addictifs", postulat: "Les interfaces de réseaux sociaux sont conçues pour capter de manière captive notre attention libre.", action: "Interdiction du défilement infini et des compteurs de validation sociale; interfaces neutres obligatoires.", financement: "Neutre (financé par des amendes administratives lourdes aux plateformes).", repercussions: "Libération d’attention ; réduction des dépressions de l’adolescence." },
+            { id: "num-14", cat: "numerique", titre: "Brigades de Réseau de Crise", postulat: "La centralisation de notre réseau le rend vulnérable à une attaque cyber ou panne générale.", action: "Formation au sein du Service Civil de brigades gérant des liaisons radio locales décentralisées.", financement: "200M€/an rattachés au budget de la Sécurité Civile.", repercussions: "Garantie de continuité de communication administrative en cas de panne globale." },
+            { id: "num-15", cat: "numerique", titre: "Interdiction de la Publicité Traquée", postulat: "L’espionnage comportemental permanent incite structurellement à la surconsommation de ressources.", action: "Bannissement des cookies tiers et des profils publicitaires ; seule la pub contextuelle reste légale.", financement: "Neutre.", repercussions: "Protection de la liberté privée des citoyens ; assainissement d’internet." },
+
+            // JUSTICE (15 mesures)
+            { id: "jus-01", cat: "justice", titre: "Magistrature d’Urgence Environnementale", postulat: "Les pollutions industrielles agissent plus vite que la lenteur de la justice classique.", action: "Création de pôles judiciaires régionaux d’urgence capables d’ordonner des blocages d’usines sous 48h.", financement: "180M€/an pour la formation de 150 magistrats et équipement mobile.", repercussions: "Arrêt immédiat des pollutions de nappes ou de l’air avant dommages irréversibles." },
+            { id: "jus-02", cat: "justice", titre: "TIG Verts pour Courtes Peines", postulat: "Incarcérer de petits délinquants pour < 6 mois coûte cher sans utilité collective.", action: "Transformation automatique en peines de travaux d’intérêt général au service des forêts, rivières et digues.", financement: "Économie directe de 450M€/an sur le budget pénitentiaire.", repercussions: "Réinsertion par l’action d’utilité concrète ; force d’action physique pour la nature." },
+            { id: "jus-03", cat: "justice", titre: "Moyens Doublés pour l'OFB", postulat: "Les lois d’interdiction de destruction de haies ou d’eau restent inappliquées par manque d’agents.", action: "Doublement des agents OFB dotés d’armes de service et d’un droit de contrôle sans préavis.", financement: "320M€/an financés par le doublement des amendes aux contrevenants.", repercussions: "Lois de protection du vivant respectées effectivement ; fin des pillages dissimulés d’eau." },
+            { id: "jus-04", cat: "justice", titre: "Démilitarisation du Maintien de l’Ordre", postulat: "Traiter les manifestants écologistes comme des ennemis militaires produit la défiance envers l’État.", action: "Interdiction des armes mutilantes (LBD, grenades) ; rétablissement d’une police de proximité à pied.", financement: "Neutre (réallocation interne des budgets du ministère de l’Intérieur).", repercussions: "Apaisement immédiat du dialogue démocratique de rue ; confiance républicaine rétablie." },
+            { id: "jus-05", cat: "justice", titre: "Aide Juridique Universelle pour les Communs", postulat: "Les petites associations locales n’ont pas les moyens de faire face aux avocats des multinationales.", action: "Prise en charge par l’État de l’intégralité des frais de défense pour les associations agréées.", financement: "90M€/an gérés par le ministère de la Justice via un fonds d'aide dédié.", repercussions: "Rapport de force équilibré pour la défense de notre environnement proche." },
+            { id: "jus-06", cat: "justice", titre: "Fortification des Infrastructures Vitales", postulat: "Nos réseaux d’eau et de trains sont trop vulnérables face aux intempéries climatiques.", action: "Plan de fortification : surélévation des pompes d’eau face aux crues, protection physique renforcée.", financement: "700M€/an financés par la réduction des frais de projection militaire lointaine.", repercussions: "Sécurité d’approvisionnement des citoyens garantie lors des tempêtes." },
+            { id: "jus-07", cat: "justice", titre: "Refondation de la Justice des Mineurs", postulat: "La justice répressive classique n’interrompt pas les traumatismes d’une jeunesse délaissée.", action: "Généralisation de la justice réparatrice : confrontation avec la victime, réparation physique, suivi cognitif.", financement: "140M€/an pour le recrutement d’éducateurs spécialisés.", repercussions: "Taux de récidive des mineurs divisé par deux d'ici 2030." },
+            { id: "jus-08", cat: "justice", titre: "Inscription de l’Écocide dans la Loi", postulat: "Détruire sciemment un écosystème d’importance majeure doit être qualifié comme un crime grave.", action: "Délit d’Écocide punissable de peines de prison ferme de 20 ans pour les dirigeants décisionnaires.", financement: "Neutre.", repercussions: "Effet dissuasif absolu sur les choix stratégiques des grands groupes pollueurs." },
+            { id: "jus-09", cat: "justice", titre: "Régulation des Assurances Climat", postulat: "L’envolée des sinistres climatiques pousse les assureurs à fuir les zones vulnérables.", action: "Obligation d'assurer tout citoyen à des tarifs plafonnés, sous garantie de la Caisse des Dépôts.", financement: "Garantie financière adossée aux actifs physiques de l’État.", repercussions: "Protection de base des ménages habitant les zones côtières ou inondables." },
+            { id: "jus-10", cat: "justice", titre: "Brigades Volontaires de Sauvetage", postulat: "Lors d’une inondation ou tempête, les secours professionnels sont instantanément débordés.", action: "Réseau de citoyens volontaires formés à l’évacuation, au rationnement et à la logistique de crise.", financement: "110M€/an d’achat de matériels de secours communaux standardisés.", repercussions: "Entraide de secours organisée en quelques minutes dans chaque village de France." },
+            { id: "jus-11", cat: "justice", titre: "Interdiction des Caméras Intelligentes", postulat: "La surveillance automatique comportementale habitue notre cerveau à la soumission passive.", action: "Bannissement complet de la reconnaissance faciale ou de l’analyse automatisée d’images dans la rue.", financement: "Économie de 200M€/an de budgets d’investissements technologiques inutiles.", repercussions: "Protection de l’anonymat républicain dans l’espace public." },
+            { id: "jus-12", cat: "justice", titre: "Statut des Lanceurs d’Alerte", postulat: "Ceux qui révèlent des scandales voient souvent leur vie professionnelle brisée.", action: "Prise en charge juridique intégrale par l’État et salaire de subsistance garanti à vie en cas de renvoi.", financement: "50M€/an gérés par l’autorité du Défenseur des Droits.", repercussions: "Dénonciation rapide des fraudes industrielles avant qu'elles ne coûtent cher à la nation." },
+            { id: "jus-13", cat: "justice", titre: "Tribunaux Permanents des Conflits d’Usages", postulat: "Les conflits pour la ressource physique (eau, bois) risquent de dégénérer en violences civiles.", action: "Juridictions paritaires d’arbitrage composées de citoyens tirés au sort et de scientifiques.", financement: "60M€/an de frais de fonctionnement et d’indemnités.", repercussions: "Résolution pacifique et indiscutable des conflits d’accès basée sur la réalité biophysique." },
+            { id: "jus-14", cat: "justice", titre: "Transparence des Fichiers de Police", postulat: "L’opacité bureaucratique des fichiers de fichage nourrit un sentiment d’arbitraire injuste.", action: "Droit d’accès universel direct en mairie pour corriger ou vérifier ses propres données informatiques.", financement: "Neutre.", repercussions: "Restauration du contrôle citoyen sur l’appareil administratif." },
+            { id: "jus-15", cat: "justice", titre: "Rénovation Canicule des Prisons", postulat: "La surpopulation dans des cellules surchauffées à > 40°C équivaut à un traitement inhumain.", action: "Isolation thermique rapide des toitures, plantation d’arbres d’ombrage et décongestion pénitentiaire.", financement: "250M€ d’investissements d’urgence d’isolation de génie civil.", repercussions: "Conditions de détention conformes aux droits humains de base." },
+
+            // CULTURE (15 mesures)
+            { id: "cul-01", cat: "culture", titre: "Conditionnement des Aides au Cinéma", postulat: "Le secteur de la création artistique doit prêcher par l’exemple de sobriété physique.", action: "Octroi des subventions lié au respect d’un cahier des charges biophysique (décors réutilisés, pas de vol long-courrier).", financement: "Neutre (simple réorientation sélective des budgets d’aides à la création).", repercussions: "Chute de 60% de l’empreinte carbone des productions nationales." },
+            { id: "cul-02", cat: "culture", titre: "Soutien aux Imaginaires Post-Croissance", postulat: "Les dystopies de fin du monde empêchent de désirer une sobriété joyeuse et sereine.", action: "Financement prioritaire des œuvres décrivant des trajectoires solidaires au sein d’une société sobre.", financement: "120M€/an d’aide ciblée du ministère de la Culture pour les scénaristes.", repercussions: "Restauration d’un enthousiasme d’avenir dans l’esprit populaire." },
+            { id: "cul-03", cat: "culture", titre: "Itinérance Culturelle Rurale Obligatoire", postulat: "La centralisation parisienne de l’offre d’art oblige les ruraux à de longs trajets polluants.", action: "Fléchage budgétaire vers les troupes mobiles jouant directement sur les places de villages.", financement: "280M€/an financés par la réduction de 20% du budget des grands opéras parisiens.", repercussions: "Revitalisation culturelle concrète de nos campagnes ; fin de l’exclusion." },
+            { id: "cul-04", cat: "culture", titre: "Interdiction du Mécénat Énergivore", postulat: "Les grands pollueurs utilisent les dons aux musées nationaux pour s’acheter une respectabilité.", action: "Interdiction de recevoir du mécénat de groupes dont le bilan carbone ne baisse pas de 5% par an.", financement: "Manque à gagner de 140M€/an, entièrement compensé par la taxe sur la publicité.", repercussions: "Assainissement éthique des musées publics ; arrêt de l’influence des lobbies." },
+            { id: "cul-05", cat: "culture", titre: "Option Artisanat Low-Tech au Bac", postulat: "Notre école valorise le travail théorique abstrait et ignore l’intelligence de la main.", action: "Mise en place d’une filière d’excellence combinant l’art, la lutherie, la charpente, la forge et la céramique.", financement: "80M€/an pour l’équipement d’ateliers d’arts manuels scolaires.", repercussions: "Revalorisation sociale profonde des métiers manuels d’art auprès des familles." },
+            { id: "cul-06", cat: "culture", titre: "Semaine de la Non-Consommation", postulat: "Nous devons réapprendre à célébrer les relations humaines gratuites en dehors de l’acte d’achat.", action: "Organisation en novembre d’une semaine sans pub, avec grands banquets de rue et bourses d’échange.", financement: "45M€/an d’aide d’organisation aux associations locales.", repercussions: "Chute de l’achat compulsif futil ; réapprentissage de la solidarité locale." },
+            { id: "cul-07", cat: "culture", titre: "Résidences Artistiques Paysannes", postulat: "Il faut briser l’entre-soi culturel urbain en croisant la pensée et la production nourricière.", action: "Octroi de bourses d’écriture : des artistes passent 6 mois logés en ferme paysanne pour y créer leurs œuvres.", financement: "24M€/an (bourses de 2 000€/mois pour 1 000 artistes sélectionnés).", repercussions: "Création artistique profondément ancrée dans les réalités physiques du pays." },
+            { id: "cul-08", cat: "culture", titre: "Musées Publics de l’Histoire de la Terre", postulat: "L’art contemporain spéculatif sert d’outil de défiscalisation déconnecté du réel.", action: "Remplacement des subventions d'art spéculatif par le financement d’expositions d’histoire des techniques.", financement: "Neutre.", repercussions: "Élévation du niveau de culture physique et scientifique des visiteurs." },
+            { id: "cul-09", cat: "culture", titre: "Valorisation des Langues Régionales", postulat: "La diversité culturelle locale renforce l’attachement sensible à nos écosystèmes proches.", action: "Financement des écoles immersives (breton, occitan, corse) et toponymie officielle bilingue.", financement: "75M€/an rattachés aux budgets régionaux.", repercussions: "Patrimoine immatériel national préservé ; responsabilité écologique locale." },
+            { id: "cul-10", cat: "culture", titre: "Refondation du Pass Culture", postulat: "Le Pass actuel subventionne indirectement les abonnements de streaming américains.", action: "Dépenses du Pass réservées au théâtre réel, au livre, aux spectacles et à l’apprentissage manuel.", financement: "Opération à budget constant (200M€/an réorientés).", repercussions: "Financement d’utilité publique fléché exclusivement vers les artistes locaux." },
+            { id: "cul-11", cat: "culture", titre: "Parité Audiovisuelle Biophysique", postulat: "Les chaînes d’info présentent la croissance comme une loi physique en n’invitant que des libéraux.", action: "Obligation d’accorder un temps d’antenne égal aux ingénieurs physiciens et climatologues.", financement: "Neutre.", repercussions: "Fin du monopole de la pensée magique sur les plateaux de télévision." },
+            { id: "cul-12", cat: "culture", titre: "Fête Nationale des Savoir-Faire Ouvriers", postulat: "La République doit célébrer dignement ceux qui maintiennent la vie matérielle du pays.", action: "Jour férié printanier de démonstration technique (greffage, forge, réparation) avec médailles du peuple.", financement: "60M€/an d’aides à l’organisation des foires techniques.", repercussions: "Restauration de la fierté sociale des classes populaires de production mécanique." },
+            { id: "cul-13", cat: "culture", titre: "Retrait des Animaux Sauvages des Spectacles", postulat: "Considérer le vivant comme un objet de foire perpétue l’illusion d’une domination abusive.", action: "Interdiction définitive des animaux sauvages dans les cirques et delphinariums sous 6 mois.", financement: "45M€ pour le rachat et le transfert des animaux vers des sanctuaires publics.", repercussions: "Élévation morale de notre rapport éthologique au vivant." },
+            { id: "cul-14", cat: "culture", titre: "Musée de l’Ère Thermodynamique et Fossile", postulat: "La nation doit conserver la mémoire de l’abondance fossile pour ne plus reproduire la frénésie du passé.", action: "Dépollution d’une ancienne raffinerie pour en faire un mémorial d’apprentissage de la transition.", financement: "150M€, financés par une taxe sur les bénéfices historiques de TotalEnergies.", repercussions: "Leçon patrimoniale d’humilité carbone transmise aux futures générations." },
+            { id: "cul-15", cat: "culture", titre: "Serment d’Hippocrate Biophysique", postulat: "La compétence technologique ne doit plus être mise aveuglément au service de projets destructeurs.", action: "Prestation d’un serment de non-destruction lors de la remise de diplôme des ingénieurs.", financement: "Neutre.", repercussions: "Responsabilisation éthique et engagement d’honneur de l’élite technique." }
+        ];
+
+        // NAVIGATION DU SITE (Single Page App)
+        function showPage(pageId) {
+            // Cacher toutes les vues
+            ['accueil', 'programme', 'candidat', 'contact'].forEach(id => {
+                document.getElementById(`view-${id}`).classList.add('hidden');
+                // Retirer le style actif de la nav
+                document.getElementById(`nav-${id}`).className = "px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5";
+            });
+
+            // Afficher la vue demandée
+            document.getElementById(`view-${pageId}`).classList.remove('hidden');
+            // Mettre la nav correspondante en actif
+            document.getElementById(`nav-${pageId}`).className = "px-3 py-1.5 rounded-lg text-sm font-semibold transition bg-presidential-navy text-white";
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // GENERATEUR DE MALENTENDU (ALÉATOIRE)
+        let derniereMesureTiree = null;
+
+        function tirerMesure() {
+            const index = Math.floor(Math.random() * programme.length);
+            const mesure = programme[index];
+            derniereMesureTiree = mesure;
+
+            const placeholder = document.getElementById('mesure-placeholder');
+            const resultat = document.getElementById('mesure-resultat');
+
+            // Animation de reset
+            resultat.classList.add('hidden');
+            placeholder.classList.add('hidden');
+
+            // Remplissage des données
+            const catInfo = categories[mesure.cat];
+            document.getElementById('res-icone').textContent = catInfo.icon;
+            document.getElementById('res-categorie').textContent = catInfo.title;
+            document.getElementById('res-id').textContent = `CODE: ${mesure.id.toUpperCase()}`;
+            document.getElementById('res-titre').textContent = mesure.titre;
+            document.getElementById('res-postulat').textContent = mesure.postulat;
+            document.getElementById('res-action').textContent = mesure.action;
+            document.getElementById('res-financement').textContent = mesure.financement;
+            document.getElementById('res-repercussions').textContent = mesure.repercussions;
+
+            // Afficher avec animation
+            setTimeout(() => {
+                resultat.classList.remove('hidden');
+                showToast("🎯 Nouvelle proposition piochée avec succès !");
+            }, 100);
+        }
+
+        // COPIER DANS LE PRESSE-PAPIER
+        function copierMesure() {
+            if (!derniereMesureTiree) return;
+            const texte = `Proposition de Julien Moreau 2027 : "${derniereMesureTiree.titre}"\nAction: ${derniereMesureTiree.action}\nEn savoir plus sur le sursaut biophysique !`;
+            
+            // Alternative robuste au navigator.clipboard en iframe
+            const el = document.createElement('textarea');
+            el.value = texte;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showToast("📋 Proposition copiée dans le presse-papier !");
+        }
+
+        // PARTAGER SUR LES RÉSEAUX
+        function partagerMesure(reseau) {
+            if (!derniereMesureTiree) return;
+            const texte = encodeURIComponent(`Incroyable cette mesure de Julien Moreau ! "${derniereMesureTiree.titre}" : ${derniereMesureTiree.action}`);
+            const url = encodeURIComponent(window.location.href);
+
+            let shareUrl = "";
+            if (reseau === 'twitter') {
+                shareUrl = `https://twitter.com/intent/tweet?text=${texte}&url=${url}`;
+            } else if (reseau === 'whatsapp') {
+                shareUrl = `https://api.whatsapp.com/send?text=${texte}%20${url}`;
+            }
+
+            if (shareUrl) {
+                window.open(shareUrl, '_blank');
+            }
+        }
+
+        // CRÉATEUR DE TOASTS PERSONNALISÉS
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "bg-presidential-navy text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl border border-white/10 flex items-center gap-2 animate-bounce";
+            toast.innerHTML = `
+                <span>📢</span>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // INITIALISATION DES THÉMATIQUES SUR L'ACCUEIL
+        function initThemesAccueil() {
+            const grid = document.getElementById('themes-grid');
+            grid.innerHTML = "";
+
+            Object.entries(categories).slice(0, 6).forEach(([key, value]) => {
+                const count = programme.filter(m => m.cat === key).length;
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 rounded-2xl border border-presidential-navy/15 shadow-sm hover:shadow-md hover:border-presidential-blue/50 transition duration-300 flex flex-col justify-between space-y-4 cursor-pointer";
+                card.onclick = () => {
+                    showPage('programme');
+                    const el = document.getElementById(`cat-block-${key}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                };
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="text-3xl">${value.icon}</div>
+                        <h3 class="font-title font-black text-lg text-presidential-navy">${value.title}</h3>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-presidential-blue">
+                        <span>${count} propositions</span>
+                        <span>Découvrir →</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // INITIALISATION DU PROGRAMME COMPLET
+        function initProgrammeComplet() {
+            const listContainer = document.getElementById('programme-list');
+            listContainer.innerHTML = "";
+
+            Object.entries(categories).forEach(([catKey, catVal]) => {
+                const mesuresTheme = programme.filter(m => m.cat === catKey);
+
+                const section = document.createElement('div');
+                section.id = `cat-block-${catKey}`;
+                section.className = "space-y-4 pt-4";
+
+                section.innerHTML = `
+                    <div class="flex items-center gap-3 border-b-2 border-presidential-navy/10 pb-2">
+                        <span class="text-4xl">${catVal.icon}</span>
+                        <div>
+                            <h2 class="font-title font-black text-2xl text-presidential-navy">${catVal.title}</h2>
+                            <span class="text-xs font-bold uppercase text-presidential-blue">${mesuresTheme.length} mesures concrètes</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4" id="mesures-container-${catKey}">
+                    </div>
+                `;
+
+                listContainer.appendChild(section);
+
+                const container = document.getElementById(`mesures-container-${catKey}`);
+                mesuresTheme.forEach(m => {
+                    const item = document.createElement('div');
+                    item.id = `mesure-item-${m.id}`;
+                    item.className = "bg-white rounded-xl p-5 border border-presidential-navy/10 shadow-sm hover:shadow transition space-y-3";
+                    item.innerHTML = `
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <span class="inline-block bg-presidential-sand text-presidential-navy font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded mb-1">${m.id.toUpperCase()}</span>
+                                <h3 class="font-title font-black text-lg text-presidential-navy">${m.titre}</h3>
+                            </div>
+                            <button onclick="copierMesureDirecte('${m.id}')" class="p-2 rounded-lg hover:bg-presidential-sand text-presidential-navy/60 hover:text-presidential-navy transition" title="Copier la mesure">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 00-2 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                            </button>
+                        </div>
+                        <p class="text-sm text-presidential-slate leading-relaxed"><strong class="text-red-600">P. Postulat :</strong> ${m.postulat}</p>
+                        <p class="text-sm text-presidential-slate leading-relaxed"><strong class="text-presidential-blue">A. Action :</strong> ${m.action}</p>
+                        
+                        <!-- Details accordéon optionnels si cliqué -->
+                        <div class="hidden pt-3 border-t border-presidential-navy/5 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs" id="detail-${m.id}">
+                            <div class="bg-amber-50/40 p-3 rounded-lg"><strong class="text-amber-800">F. Financement :</strong> ${m.financement}</div>
+                            <div class="bg-emerald-50/40 p-3 rounded-lg"><strong class="text-emerald-800">R. Répercussions :</strong> ${m.repercussions}</div>
+                        </div>
+
+                        <div class="text-center pt-2">
+                            <button onclick="toggleDetail('${m.id}')" id="btn-toggle-${m.id}" class="text-xs font-bold text-presidential-blue hover:underline">Afficher le financement & répercussions 🔍</button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            });
+        }
+
+        function toggleDetail(id) {
+            const block = document.getElementById(`detail-${id}`);
+            const btn = document.getElementById(`btn-toggle-${id}`);
+            if (block.classList.contains('hidden')) {
+                block.classList.remove('hidden');
+                btn.textContent = "Masquer le financement & répercussions 🔺";
+            } else {
+                block.classList.add('hidden');
+                btn.textContent = "Afficher le financement & répercussions 🔍";
+            }
+        }
+
+        function copierMesureDirecte(id) {
+            const m = programme.find(item => item.id === id);
+            if (!m) return;
+            const texte = `Proposition Julien Moreau 2027 [${m.id.toUpperCase()}] : "${m.titre}"\nAction: ${m.action}`;
+            
+            const el = document.createElement('textarea');
+            el.value = texte;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showToast("📋 Proposition copiée !");
+        }
+
+        // FONCTION DE RECHERCHE DANS LE PROGRAMME
+        function filtrerProgramme() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+
+            programme.forEach(m => {
+                const element = document.getElementById(`mesure-item-${m.id}`);
+                const match = m.titre.toLowerCase().includes(query) || 
+                              m.postulat.toLowerCase().includes(query) || 
+                              m.action.toLowerCase().includes(query) ||
+                              m.id.toLowerCase().includes(query);
+
+                if (match) {
+                    element.classList.remove('hidden');
+                } else {
+                    element.classList.add('hidden');
+                }
+            });
+
+            // Cacher les titres de catégories vides
+            Object.keys(categories).forEach(catKey => {
+                const container = document.getElementById(`cat-block-${catKey}`);
+                const visibleMesures = container.querySelectorAll(`[id^="mesure-item-"]:not(.hidden)`);
+                if (visibleMesures.length === 0) {
+                    container.classList.add('hidden');
+                } else {
+                    container.classList.remove('hidden');
+                }
+            });
+        }
+
+        // SIMULATION D'ENVOI DE CONTACT
+        function submitContact(event) {
+            event.preventDefault();
+            const checked = document.getElementById('voter-checkbox').checked;
+            
+            let message = "Merci pour votre message ! Notre équipe de bénévoles biophysiques va vous répondre rapidement.";
+            if (checked) {
+                message += " On enregistre votre intention de vote sur un malentendu ! 😉";
+            }
+
+            // Afficher une alerte stylisée sans utiliser alert() standard
+            const container = document.getElementById('toast-container');
+            const alertBox = document.createElement('div');
+            alertBox.className = "bg-emerald-600 text-white text-sm font-semibold p-4 rounded-xl shadow-2xl max-w-sm flex flex-col gap-2 animate-bounce";
+            alertBox.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✅</span>
+                    <span>Message transmis avec succès !</span>
+                </div>
+                <p class="text-xs text-white/95">${message}</p>
+            `;
+            container.appendChild(alertBox);
+            setTimeout(() => alertBox.remove(), 6000);
+
+            event.target.reset();
+        }
+
+        // Lancement au chargement
+        window.onload = function() {
+            initThemesAccueil();
+            initProgrammeComplet();
+        }
+    </script>
+</body>
+</html>

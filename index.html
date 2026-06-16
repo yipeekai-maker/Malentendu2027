@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>En route pour 2027 | Site Officiel</title>
+    <style>
+        /* --- VARIABLES DE DESIGN --- */
+        :root {
+            --primary: #0f172a;       /* Bleu nuit présidentiel */
+            --accent: #2563eb;        /* Bleu dynamique */
+            --button-bg: #dc2626;     /* Rouge "Malentendu" qui claque */
+            --button-hover: #b91c1c;
+            --text: #334155;
+            --bg: #f8fafc;
+        }
+
+        /* --- RESET & FONTS --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent);
+        }
+
+        /* --- ZONE PRINCIPALE (HERO) --- */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: #64748b;
+        }
+
+        /* --- LE GROS BOUTON --- */
+        .btn-malentendu {
+            background-color: var(--button-bg);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+
+        .btn-malentendu:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-malentendu:active {
+            transform: translateY(-1px);
+        }
+
+        /* --- CARTE DE LA MESURE ALEATOIRE --- */
+        .container-mesure {
+            margin-top: 2.5rem;
+            min-height: 200px; /* Évite que le footer saute à l'apparition */
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .carte-mesure {
+            background: white;
+            border-left: 5px solid var(--accent);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: left;
+            display: none; /* Caché par défaut */
+            
+            /* Animation d'apparition */
+            animation: apparition Douce 0.4s ease-out forwards;
+        }
+
+        @keyframes apparitionDouce {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .badge-categorie {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--accent);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .titre-mesure {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .desc-mesure {
+            color: var(--text);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">Alexandre Martin 2027</a>
+        <nav>
+            <a href="#" class="active">Accueil</a>
+            <a href="#">Le Candidat</a>
+            <a href="#">Le Programme</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Sur un malentendu, ça peut marcher.</h1>
+        <p class="subtitle">Vous n'avez pas le temps de lire 100 mesures ? Laissez le destin choisir celle qui va vous convaincre.</p>
+
+        <!-- Le bouton magique -->
+        <button class="btn-malentendu" id="btnMalentendu">🎲 Sur un malentendu !</button>
+
+        <!-- La zone d'affichage du résultat -->
+        <div class="container-mesure">
+            <div class="carte-mesure" id="carteMesure">
+                <span class="badge-categorie" id="mesureCategorie">Économie</span>
+                <h3 class="titre-mesure" id="mesureTitre">Titre de la mesure</h3>
+                <p class="desc-mesure" id="mesureDescription">Description détaillée de la mesure...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- ÉCHANTILLON DE DONNÉES (Simule ton fichier JSON) ---
+        const programmeData = [
+          {
+            "categorie": "Économie & Pouvoir d'achat",
+            "icone": "💰",
+            "mesures": [
+              { "titre": "La semaine des 4 jours", "description": "Mise en place de la semaine de 32h sans baisse de salaire pour stimuler le bien-être." },
+              { "titre": "TVA Zéro", "description": "Suppression totale de la T.V.A. sur les 50 produits de première nécessité." }
+            ]
+          },
+          {
+            "categorie": "Écologie & Climat",
+            "icone": "🌱",
+            "mesures": [
+              { "titre": "Transports gratuits", "description": "Prise en charge à 100% des trains régionaux et bus pour tous les résidents." },
+              { "titre": "Plan 1 Milliard d'Arbres", "description": "Reforestation massive des centres-villes pour abaisser la température l'été." }
+            ]
+          }
+        ];
+
+        // 1. On prépare la liste plate de toutes les mesures au chargement de la page
+        const toutesLesMesures = [];
+        programmeData.forEach(bloc => {
+            bloc.mesures.forEach(mesure => {
+                toutesLesMesures.push({
+                    titre: mesure.titre,
+                    description: mesure.description,
+                    categorie: `${bloc.icone} ${bloc.categorie}`
+                });
+            });
+        });
+
+        // 2. Ciblage des éléments HTML
+        const bouton = document.getElementById('btnMalentendu');
+        const carte = document.getElementById('carteMesure');
+        const txtCategorie = document.getElementById('mesureCategorie');
+        const txtTitre = document.getElementById('mesureTitre');
+        const txtDescription = document.getElementById('mesureDescription');
+
+        // 3. Événement au clic
+        bouton.addEventListener('click', () => {
+            // Tirage au sort
+            const indexAleatoire = Math.floor(Math.random() * toutesLesMesures.length);
+            const mesurePiochee = toutesLesMesures[indexAleatoire];
+
+            // Remplissage des textes
+            txtCategorie.textContent = mesurePiochee.categorie;
+            txtTitre.textContent = mesurePiochee.titre;
+            txtDescription.textContent = mesurePiochee.description;
+
+            // Gestion de l'animation : on masque et réaffiche pour relancer l'effet visuel à chaque clic
+            carte.style.display = 'none';
+            // Le "setTimeout" force le navigateur à comprendre que la carte a été masquée avant de la réafficher
+            setTimeout(() => {
+                carte.style.display = 'block';
+            }, 10);
+        });
+    </script>
+</body>
+</html>
