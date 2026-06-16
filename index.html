@@ -61,6 +61,21 @@
             from { opacity: 0; transform: scale(0.96) translateY(12px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
+
+        /* Animation d'apparition rapide du menu déroulant */
+        .dropdown-appear {
+            animation: dropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(10px) translateX(-50%); }
+            to { opacity: 1; transform: translateY(0) translateX(-50%); }
+        }
+        @media (min-width: 640px) {
+            @keyframes dropdownFade {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
     </style>
 </head>
 <body class="paper-texture min-height-screen flex flex-col font-sans text-presidential-navy selection:bg-presidential-gold selection:text-white">
@@ -91,9 +106,27 @@
                 </div>
             </a>
             
-            <nav class="flex items-center gap-1 sm:gap-4 mt-2 sm:mt-0">
+            <nav class="flex items-center gap-1 sm:gap-4 mt-2 sm:mt-0 relative">
                 <button onclick="showPage('accueil')" id="nav-accueil" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition bg-presidential-navy text-white">Accueil</button>
-                <button onclick="showPage('programme')" id="nav-programme" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5">Le Programme</button>
+                
+                 <!-- MENU DÉROULANT DU PROGRAMME (ACTIVÉ AU SURVOL) -->
+                <div class="relative group inline-block">
+                    <button onclick="showPage('programme')" id="nav-programme" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5 flex items-center gap-1">
+                        <span>Le Programme</span>
+                        <!-- Flèche rotative au survol -->
+                        <svg class="w-3 h-3 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
+                        </svg>
+                    </button>
+                    <!-- Conteneur externe de transition pour garder le hover actif de manière continue -->
+                    <div class="absolute left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 top-full pt-2 w-64 hidden group-hover:block z-50">
+                        <!-- Liste déroulante réelle -->
+                        <div id="dropdown-menu" class="bg-white/95 backdrop-blur-md border border-presidential-navy/10 rounded-xl shadow-2xl py-2 dropdown-appear">
+                            <!-- Rempli dynamiquement par JS -->
+                        </div>
+                    </div>
+                </div>
+
                 <button onclick="showPage('candidat')" id="nav-candidat" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5">Le Candidat</button>
                 <button onclick="showPage('contact')" id="nav-contact" class="px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5">Contact</button>
             </nav>
@@ -117,9 +150,6 @@
                 <!-- Partie gauche : Slogans et Textes -->
                 <div class="p-8 sm:p-12 lg:col-span-7 flex flex-col justify-between space-y-8">
                     <div class="space-y-6">
-                        <!-- Badge Votez Moreau -->
-                        
-
                         <!-- Titre d'affiche -->
                         <div class="space-y-1">
                             <h1 class="font-title font-black text-5xl sm:text-7xl tracking-tighter text-presidential-navy leading-none">
@@ -176,9 +206,8 @@
                     </div>
                 </div>
 
-                <!-- Partie droite : Portrait Silhouette stylisé reprenant la pose du candidat (Thumbs Up) -->
-                 
-                <div class="lg:col-span-5  flex flex-col justify-between items-center p-8 relative min-h-[400px]">
+                <!-- Partie droite : Photo du candidat s'adaptant à l'ensemble du bloc -->
+                <div class="lg:col-span-5 flex flex-col justify-between items-center p-8 relative min-h-[400px]">
                     <img 
         src="images/julien-moreau.png" 
         alt="Julien Moreau" 
@@ -202,6 +231,7 @@
                         <div class="bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20">
                             <span class="font-bold tracking-wide">Julien Moreau, le candidat que vous n'avez pas vu venir</span>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -233,9 +263,9 @@
                         <!-- État par défaut -->
                         <div id="mesure-placeholder" class="text-center py-6 space-y-3">
                             <p class="font-hand text-2xl sm:text-3xl text-presidential-blue">
-                                 N'aie pas peur appuie sur le bouton, ça va bien se passer 
+                                 N'ayez pas peur appuyez sur le bouton, ça va bien se passer 
                             </p>
-                            <p class="text-xs text-presidential-navy/50 font-semibold tracking-wider uppercase">Aucun animal n'a été blessé lors de la rédaction de ce programme.</p>
+                            <p class="text-xs text-presidential-navy/50 font-semibold tracking-wider uppercase">Aucun animal n'a été blessé lors de la rédaction de ce programme</p>
                         </div>
 
                         <!-- État après clic -->
@@ -300,7 +330,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="themes-grid">
-                    <!-- Généré dynamiquement en JS pour correspondre au JSON -->
+                    <!-- Généré dynamiquement en JS pour correspondre au JSON (10 thèmes s'affichent maintenant) -->
                 </div>
 
                 <div class="text-center pt-4">
@@ -344,12 +374,14 @@
             <div class="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-presidential-navy/10 space-y-8">
                 
                 <div class="flex flex-col md:flex-row items-center gap-8 border-b border-presidential-navy/10 pb-8">
-                    <div class="w-40 h-40 rounded-full bg-gradient-to-tr from-presidential-blue to-presidential-navy flex items-center justify-center text-white text-6xl shadow-inner flex-shrink-0">
+                    <!-- Photo du candidat dans un rond bleu élégant -->
+                    <div class="w-40 h-40 rounded-full bg-gradient-to-tr from-presidential-blue to-presidential-navy shadow-inner flex-shrink-0 overflow-hidden p-1">
                         <img 
-        src="images/julien-moreau-rond.png" 
-        alt="Portrait de Julien Moreau" 
-        class="w-full h-full rounded-full object-cover"
-    />
+                            src="images/julien-moreau-rond.png" 
+                            alt="Portrait de Julien Moreau" 
+                            onerror="this.src='https://placehold.co/300x300/2a5ca8/ffffff?text=JM'"
+                            class="w-full h-full rounded-full object-cover"
+                        />
                     </div>
                     <div class="space-y-3 text-center md:text-left">
                         <h1 class="font-title font-black text-3xl sm:text-4xl text-presidential-navy">Qui est Julien Moreau ?</h1>
@@ -409,7 +441,7 @@
                         <select class="w-full bg-presidential-sand/40 border border-presidential-navy/20 focus:ring-2 focus:ring-presidential-blue rounded-xl px-4 py-3 text-sm focus:outline-none">
                             <option value="">Sélectionner...</option>
                             <option value="75">75 - Paris</option>
-                            <option value="14">14 - Calvados (Bayeux)</option>
+                            
                             <option value="other">Autre département / Étranger</option>
                         </select>
                     </div>
@@ -507,7 +539,7 @@
             { id: "nrj-12", cat: "energie", titre: "Service Civil de Résilience Écologique", postulat: "L'adaptation du pays nécessite une immense force d'action humaine pour des travaux non rentables.", action: "Service obligatoire de 9 mois pour tous les jeunes de 18 à 25 ans dédié à la restauration des milieux naturels.", financement: "3,8Md€/an (hébergement, solde), financés par une taxation accrue des successions > 2M€.", repercussions: "Cohésion nationale renforcée; chantiers d'envergure réalisés (reforestation, entretien des digues)." },
             { id: "nrj-13", cat: "energie", titre: "Obsolescence Garantie 10 ans et Réparabilité", postulat: "La destruction programmée des objets manufacturés pille les ressources géologiques.", action: "Extension légale de la garantie à 10 ans pour le gros électroménager; taxe de 150% si pièces non disponibles sous 48h.", financement: "700M€/an de recettes initiales, décroissantes au fur et à mesure de l'adaptation de l'industrie.", repercussions: "Relance massive de l'artisanat local de réparation; baisse drastique des déchets électroniques." },
             { id: "nrj-14", cat: "energie", titre: "Plan National de Dé-asphaltage", postulat: "La bétonisation accélère l'érosion des sols et détruit la résilience hydrologique face aux inondations.", action: "Gel de toute nouvelle artificialisation; rachat public de zones commerciales obsolètes pour ré-ensauvagement.", financement: "2,2Md€/an, financés par l'arrêt total des nouveaux projets d'autoroutes et d'infrastructures routières.", repercussions: "Restauration des nappes et zones humides; amélioration de la résilience aux inondations cévenoles." },
-            { id: "nrj-15", cat: "energie", titre: "Sortie du Marché Européen de l'Électricité", postulat: "Fixer le prix de notre électricité décarbonée sur le coût du gaz fossile importé ruine les ménages.", action: "Rétablissement de tarifs réglementés basés uniquement sur les coûts de production historiques réels français.", financement: "Économie nette de 12Md€/an pour l'État en supprimant le bouclier tarifaire d'urgence.", repercussions: "Avantage compétitif industriel majeur; baisse immédiate des factures d'électricité des ménages de 40%." },
+            { id: "nrj-15", cat: "energie", titre: "Sortie du Marché Européen de l'Électricité", postulat: "Fixer le prix de notre électricité décarbonée sur le coût du gaz fossile importé ruine les ménages.", action: "Rétablissement de tarifs réglementés basés uniquement sur les coûts de production historiques réels français.", financement: "Économie nette de 12Md€/an pour l’État en supprimant le bouclier tarifaire d’urgence.", repercussions: "Avantage compétitif industriel majeur; baisse immédiate des factures d'électricité des ménages de 40%." },
 
             // GEOPOLITIQUE (15 mesures)
             { id: "geo-01", cat: "geopolitique", titre: "Retrait du Commandement Intégré de l'OTAN", postulat: "La France ne doit pas être entraînée automatiquement dans des guerres d'alliances ou de blocs impériaux.", action: "Sortie des structures militaires intégrées tout en restant signataire politique du traité fondateur (position de 1966).", financement: "Économie nette de 900M€/an de frais de structure et d'interopérabilité technologique.", repercussions: "Restauration de la voix libre et non alignée de la France à l'ONU et auprès du Sud Global." },
@@ -515,7 +547,7 @@
             { id: "geo-03", cat: "geopolitique", titre: "Réorientation de l'Armée vers la Protection Civile", postulat: "Les menaces physiques climatiques (incendies, inondations) sont plus destructrices que les invasions armées.", action: "Fléchage des budgets d'équipements lourds vers les flottes de Canadairs, le génie de crise et le sauvetage.", financement: "Redéploiement interne de 4,2Md€/an au sein de la Loi de Programmation Militaire (sans surcoût net).", repercussions: "Capacité autonome de l'État à sécuriser le territoire national face aux mégafeux et submersions." },
             { id: "geo-04", cat: "geopolitique", titre: "Nationalisation de l'Actionnariat d'Armement", postulat: "L'indépendance de la défense est compromise par la présence de capitaux spéculatifs étrangers dans nos usines.", action: "Rachat obligatoire par l'État de 100% des parts d'entreprises stratégiques (Dassault, Thales, Naval Group).", financement: "6,5Md€ d'acquisition d'actifs (comptabilisé en investissement patrimonial, pas en déficit).", repercussions: "Absence totale de véto technologique ou de porte dérobée étrangère dans notre matériel militaire." },
             { id: "geo-05", cat: "geopolitique", titre: "Limitation Démocratique du Veto à l'ONU", postulat: "La paralysie du Conseil de Sécurité discrédite le multilatéralisme face aux massacres de populations.", action: "Proposition officielle de suspendre le droit de veto en cas de crimes de guerre flagrants validés par l'Assemblée Générale.", financement: "Neutre.", repercussions: "Pression morale immense sur les membres permanents; retour de l'ONU au cœur de la résolution pacifique." },
-            { id: "geo-06", cat: "geopolitique", titre: "Fonds de Co-développement Euro-Méditerranéen", postulat: "La stabilité du bassin méditerranéen découle directement de la dégradation hydrologique et agraire.", action: "Partenariats de transferts de technologies non marchandes sur le traitement de l'eau et la lutte contre le désert.", financement: "3Md€/an, financés par la suppression des aides au développement classiques fléchées vers la corruption.", repercussions: "Baisse structurelle des flux migratoires de détresse en fixant les populations sur des sols fertiles." },
+            { id: "geo-06", cat: "geopolitique", titre: "Fonds de Co-développement Euro-Méditerranéen", postulat: "La stabilité du bassin méditerranéen découle directement de la dégradation hydrologique et agraire.", action: "Partenariats de transferts de technologies non marchandes sur le traitement de l’eau et la lutte contre le désert.", financement: "3Md€/an, financés par la suppression des aides au développement classiques fléchées vers la corruption.", repercussions: "Baisse structurelle des flux migratoires de détresse en fixant les populations sur des sols fertiles." },
             { id: "geo-07", cat: "geopolitique", titre: "Suspension des Accords de Libre-Échange", postulat: "Importer sans douane des produits fabriqués sans normes détruit l'économie locale et notre souveraineté.", action: "Suspension unilatérale des traités CETA et Mercosur; application de clauses miroirs écologiques douanières.", financement: "Génération de 2,4Md€/an de droits de douane protecteurs réinjectés dans l'agriculture locale.", repercussions: "Relocalisation de l'appareil de production agroalimentaire; protection effective de la paysannerie." },
             { id: "geo-08", cat: "geopolitique", titre: "Dédollarisation des Transactions Souveraines", postulat: "L'extraterritorialité du droit américain s'appuie sur le dollar pour bloquer nos entreprises souveraines.", action: "Obligation d'utiliser exclusivement l'euro ou des accords bilatéraux monétaires pour les matières critiques.", financement: "Neutre; protection des banques françaises contre les amendes arbitraires américaines.", repercussions: "Immunisation juridique totale des échanges extérieurs français d'intérêt vital." },
             { id: "geo-09", cat: "geopolitique", titre: "Sanctuarisation de la Dissuasion Nucléaire Nationale", postulat: "Notre dissuasion est l'assurance-vie ultime de la France. Elle ne doit pas être diluée dans l'Europe.", action: "Refus de tout partage de commandement nucléaire; indépendance complète préservée face à l'OTAN et l'UE.", financement: "Neutre (maintien de la trajectoire budgétaire interne d'entretien de la dissuasion).", repercussions: "Maintien de l'autonomie stratégique suprême de la France en situation de guerre globale." },
@@ -524,7 +556,7 @@
             { id: "geo-12", cat: "geopolitique", titre: "Constitution de Stocks Stratégiques de Métaux", postulat: "La transition sobre nécessite des matériaux critiques dont l'accès physique mondial se resserre.", action: "Constitution de 5 ans de stock physique d'État en cuivre, nickel, cobalt, zinc et silicium.", financement: "3,5Md€ financés par émission d'obligations de résilience d'État à long terme.", repercussions: "Immunité complète des filières de réparation et de transports ferroviaires contre les blocus maritimes." },
             { id: "geo-13", cat: "geopolitique", titre: "Alliance Spatiale Civile et Libre", postulat: "L'espace se privatise au profit d'intérêts de surveillance commerciale et de contrôle militaire.", action: "Lancement d'une constellation publique partagée de satellites d'observation climat en Open Data.", financement: "400M€/an réorientés des programmes de vols habités lointains et d'exploration non prioritaire du CNES.", repercussions: "Indépendance des données de surveillance environnementale vis-à-vis des milliardaires de la Tech américaine." },
             { id: "geo-14", cat: "geopolitique", titre: "Francophonie Low-Tech", postulat: "L'influence française doit s'articuler autour de solidarités physiques concrètes, pas seulement linguistiques.", action: "Plateforme internationale de partage gratuit de brevets low-tech: irrigation, machines-outils réparables.", financement: "150M€/an opérés par le ministère des Affaires Étrangères.", repercussions: "Création d'un contre-modèle de codéveloppement technique face à l'endettement technologique imposé par la Chine." },
-            { id: "geo-15", cat: "geopolitique", titre: "Clause Constitutionnelle de Sauvegarde Verte", postulat: "Le droit commercial européen et international bloque régulièrement les nationalisations de transition.", action: "Inscription constitutionnelle de la primauté des lois de planification et de préservation biophysique sur le droit commercial.", financement: "Neutre; protection de l'État contre les procès d'investisseurs privés ou arbitrages OMC.", repercussions: "Libération complète de l'action de l'État souverain pour organiser le bien commun." },
+            { id: "geo-15", cat: "geopolitique", titre: "Clause Constitutionnelle de Sauvegarde Verte", postulat: "Le droit commercial européen et international bloque régulièrement les nationalisations de transition.", action: "Inscription constitutionnelle de la primauté des lois de planification et de préservation biophysique sur le droit commercial.", fill: "neutre", financement: "Neutre; protection de l'État contre les procès d'investisseurs privés ou arbitrages OMC.", repercussions: "Libération complète de l'action de l'État souverain pour organiser le bien commun." },
 
             // ECONOMIE (15 mesures)
             { id: "eco-01", cat: "economie", titre: "Remplacement du PIB par l'IRB", postulat: "Le PIB mesure la frénésie de transformation monétaire mais pas l'état physique réel de la nation.", action: "L'Indicateur de Résilience Biophysique (IRB) devient l'indice d'évaluation de la loi de finances.", financement: "Neutre (réorganisation de l'INSEE).", repercussions: "Fin de la course au PIB; arbitrage des dépenses publiques indexé sur la préservation du carbone, de la santé et des sols." },
@@ -572,7 +604,7 @@
             { id: "san-09", cat: "sante", titre: "Gardes Hospitalières de 12h Maximum", postulat: "Faire travailler des internes ou soignants pendant 24h d’affilée détruit leurs capacités de jugement.", action: "Plafonnement légal des gardes consécutives à 12h ; repos obligatoire garanti sous peine de sanctions pénales des directions.", financement: "Financement inclus dans le plan d’attractivité et de recrutement général.", repercussions: "Sécurité thérapeutique accrue pour les patients ; amélioration de la santé physique et mentale des équipes médicales." },
             { id: "san-10", cat: "sante", titre: "Diagnostic Communal de Résilience Canicule", postulat: "L’intensité des canicules à venir exige d’organiser des parcours de fraîcheur coordonnés de crise.", action: "Obligation pour chaque territoire d’élaborer une cartographie de mise à disposition d’îlots frais et de stocks d’eau.", financement: "150M€/an opérés par Santé Publique France.", repercussions: "Protection efficace de la population vulnérable ; réduction spectaculaire de la surmortalité estivale." },
             { id: "san-11", cat: "sante", titre: "Moratoire sur la Télémédecine Commerciale", postulat: "La téléconsultation de confort déshumanise la clinique et multiplie les arrêts maladie de complaisance.", action: "Interdiction de l'accès aux arrêts de travail de > 48h en téléconsultation, sauf si géré par le médecin de famille.", financement: "Économie directe de 600M€/an pour l’Assurance Maladie par le contrôle des abus spéculatifs.", repercussions: "Recentrage des moyens de l’Assurance Maladie sur la consultation humaine réelle de proximité." },
-            { id: "san-12", cat: "sante", titre: "Priorisation de la Recherche sur la Santé Féminine", postulat: "La recherche médicale moderne souffre d’un biais androcentrique, négligeant les spécificités du corps des femmes.", action: "Fléchage de 40% des enveloppes de recherche de l’INSERM vers l’endométriose et les pathologies de genre.", financement: "Neutre (réallocation interne des priorités de recherche scientifique de l’État).", repercussions: "Temps de diagnostic de l’endométriose ramené de 7 ans à moins de 12 mois." },
+            { id: "san-12", cat: "sante", titre: "Priorisation de la Recherche sur la Santé Féminine", postulat: "La recherche médicale moderne souffre d’un biais androcentrique, neglecting les spécificités du corps des femmes.", action: "Fléchage de 40% des enveloppes de recherche de l’INSERM vers l’endométriose et les pathologies de genre.", financement: "Neutre (réallocation interne des priorités de recherche scientifique de l’État).", repercussions: "Temps de diagnostic de l’endométriose ramené de 7 ans à moins de 12 mois." },
             { id: "san-13", cat: "sante", titre: "Brigades Sanitaires Mobiles de Prévention", postulat: "Attendre que les populations paupérisées tombent malade pour les soigner est une erreur d’efficacité publique.", action: "Déploiement d’équipes de soignants et éducateurs allant au-devant des habitants isolés.", financement: "800M€/an, entièrement financés par la suppression des campagnes télévisées nationales de communication.", repercussions: "Détection précoce des maladies de mode de vie ; désengorgement des urgences hospitalières de base." },
             { id: "san-14", cat: "sante", titre: "Aménagement de Parcours Sportifs Publics", postulat: "L’inactivité physique cause des ravages métaboliques que les salles de fitness privées ne compensent pas.", action: "Fléchage du budget des sports vers la construction d’accès gratuits, d’aménagements cyclables et de piscines communales.", financement: "Réorientation du budget du ministère des Sports (fin des subventions aux stades professionnels marchands).", repercussions: "Amélioration générale du profil de santé métabolique de la population active." },
             { id: "san-15", cat: "sante", titre: "Droit à la Fin de Vie Digne non Marchande", postulat: "L’accompagnement terminal des êtres humains ne doit jamais faire l’objet de profits de cliniques privées.", action: "Légalisation de l’aide active à mourir encadrée ; interdiction stricte de l’exploitation de soins palliatifs à but lucratif.", financement: "Neutre (financement public des lits de soins palliatifs via les économies sur les actes T2A).", repercussions: "Souveraineté éthique ultime préservée de l’individu ; fin de l’agonie humaine mercantiliste." },
@@ -605,7 +637,7 @@
             { id: "agr-08", cat: "agriculture", titre: "Statut National de 'Fermier d’État'", postulat: "La moitié des exploitants part à la retraite sous 5 ans ; la terre s’industrialise par manque de repreneurs.", action: "Fonctionnarisation des terres délaissées : l’État salarie de jeunes paysans pour produire l'alimentation de base.", financement: "1,5Md€/an (salaire, logistique) financés par l’arrêt de la niche fiscale sur le gazole agricole industriel.", repercussions: "Rajeunissement rural immédiat ; souveraineté alimentaire d’intérêt général planifiée." },
             { id: "agr-09", cat: "agriculture", titre: "Prix Planchers Paysans Obligatoires", postulat: "Les centrales d’achat forcent les paysans à vendre sous leur coût, provoquant des drames réguliers.", action: "Loi interdisant d’acheter une denrée agricole sous son coût, incluant la garantie de deux SMIC pour l’exploitant.", financement: "Neutre (régulation directe des marges d’intermédiaires des centrales de la grande distribution).", repercussions: "Fin de la pauvreté rurale ; attractivité retrouvée des métiers de la terre pour les jeunes générations." },
             { id: "agr-10", cat: "agriculture", titre: "Blocage Douanier Déforestation", postulat: "Sous-traiter notre destruction écologique en important du soja OGM détruit la légitimité de notre pays.", action: "Interdiction de toute importation agroalimentaire ayant causé la destruction de forêts primaires mondiales.", financement: "40M€/an d’inspections douanières physiques renforcées.", repercussions: "Fin de l’alimentation animale à base de soja importé ; relocalisation de la culture de luzerne en France." },
-            { id: "agr-11", cat: "agriculture", titre: "Épargne Foncière de la SAFER", postulat: "Le capital financier privé pousse à l’artificialisation commerciale des terres de grande qualité.", action: "Création d’un livret public garanti pour acheter et sanctuariser définitivement la terre agricole.", financement: "Opération patrimoniale de collecte d’épargne citoyenne stable garantie à 2,5%.", repercussions: "Sanctuarisation à vie du foncier agricole nourricier de la nation." },
+            { id: "agr-11", cat: "agriculture", titre: "Épargne Foncière de la SAFER", postulat: "Le capital financier privé pousse à l’artificialisation commerciale des terres de grande qualité.", action: "Création d’un livret public garanti pour acheter et sanctuariser définitivement la terre agricole.", financement: "Opération patrimoniale de collecte d’épargne citoyenne stable garantie à 2,5%.", repercussions: "Sanctuarisation à vie du foncier agricole nouricier de la nation." },
             { id: "agr-12", cat: "agriculture", titre: "Rotation Longue Agroécologique", postulat: "La monoculture intensive de maïs détruit l’humus biologique et impose toujours plus de chimie.", action: "Conditionnement des droits de culture à l’utilisation d’au moins 5 cultures tournantes sur un cycle de 7 ans.", financement: "Neutre.", repercussions: "Disparition naturelle des besoins d’insecticides et de fertilisants ; sols sains et vivants." },
             { id: "agr-13", cat: "agriculture", titre: "Interdiction des Néonicotinoïdes", postulat: "La effondrement des abeilles et insectes pollinisateurs condamne la survie future de l’arboriculture.", action: "Retrait immédiat du marché de l’ensemble des molécules tueuses d’insectes, sans aucun report.", financement: "Fonds d’accompagnement de 200M€ pour aider la transition de la filière sucrière.", repercussions: "Protection effective des pollinisateurs vitaux ; retour de la biodiversité entomologique." },
             { id: "agr-14", cat: "agriculture", titre: "Réserves Alimentaires de 6 Mois", postulat: "Les vannes logistiques routières s’interrompent à la moindre panne d’approvisionnement électrique.", action: "Silots départementaux d’État stockant céréales et légumineuses sèches correspondant à 180 jours de vie locale.", financement: "1,1 Md€ d’investissements, financés par la taxe carbone sur les superprofits pétroliers.", repercussions: "La population est immunisée physiquement contre tout blocus, guerre extérieure ou crise logistique." },
@@ -669,16 +701,65 @@
             ['accueil', 'programme', 'candidat', 'contact'].forEach(id => {
                 document.getElementById(`view-${id}`).classList.add('hidden');
                 // Retirer le style actif de la nav
-                document.getElementById(`nav-${id}`).className = "px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5";
+                document.getElementById(`nav-${id}`).className = "px-3 py-1.5 rounded-lg text-sm font-semibold transition text-presidential-navy hover:bg-presidential-navy/5 flex items-center gap-1";
             });
 
             // Afficher la vue demandée
             document.getElementById(`view-${pageId}`).classList.remove('hidden');
+            
             // Mettre la nav correspondante en actif
-            document.getElementById(`nav-${pageId}`).className = "px-3 py-1.5 rounded-lg text-sm font-semibold transition bg-presidential-navy text-white";
+            const activeBtn = document.getElementById(`nav-${pageId}`);
+            if (activeBtn) {
+                if (pageId === 'programme') {
+                    activeBtn.className = "px-3 py-1.5 rounded-lg text-sm font-semibold transition bg-presidential-navy text-white flex items-center gap-1";
+                } else {
+                    activeBtn.className = "px-3 py-1.5 rounded-lg text-sm font-semibold transition bg-presidential-navy text-white";
+                }
+            }
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // REDIRECTION VERS UNE THÉMATIQUE DU PROGRAMME
+        function naviguerVersTheme(catKey) {
+            // Afficher la page du programme d'abord
+            showPage('programme');
+            
+            // Attendre un court instant que l'élément soit affiché dans le DOM, puis défiler
+            setTimeout(() => {
+                const element = document.getElementById(`cat-block-${catKey}`);
+                if (element) {
+                    const yOffset = -90; // Compensation pour le header collant
+                    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                    showToast(`📍 Navigation : ${categories[catKey].title}`);
+                }
+            }, 150);
+        }
+
+        // INITIALISATION DE LA LISTE DÉROULANTE (DROPDOWN NAVIGATION)
+        function initDropdownMenu() {
+            const container = document.getElementById('dropdown-menu');
+            container.innerHTML = "";
+
+            Object.entries(categories).forEach(([key, value]) => {
+                const item = document.createElement('a');
+                item.href = "#";
+                item.className = "flex items-center gap-3 px-4 py-2 text-xs font-bold text-presidential-navy hover:bg-presidential-navy/5 hover:text-presidential-blue transition-all duration-150 border-b border-presidential-navy/5 last:border-b-0";
+                
+                // Clic sur l'élément du menu
+                item.onclick = (e) => {
+                    e.preventDefault();
+                    naviguerVersTheme(key);
+                };
+
+                item.innerHTML = `
+                    <span class="text-lg">${value.icon}</span>
+                    <span class="truncate">${value.title}</span>
+                `;
+                container.appendChild(item);
+            });
         }
 
         // GENERATEUR DE MALENTENDU (ALÉATOIRE)
@@ -719,7 +800,6 @@
             if (!derniereMesureTiree) return;
             const texte = `Proposition de Julien Moreau 2027 : "${derniereMesureTiree.titre}"\nAction: ${derniereMesureTiree.action}\nEn savoir plus sur le sursaut biophysique !`;
             
-            // Alternative robuste au navigator.clipboard en iframe
             const el = document.createElement('textarea');
             el.value = texte;
             document.body.appendChild(el);
@@ -752,7 +832,7 @@
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = "bg-presidential-navy text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl border border-white/10 flex items-center gap-2 animate-bounce";
+            toast.className = "bg-presidential-navy text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl border border-white/10 flex items-center gap-2 animate-bounce z-50";
             toast.innerHTML = `
                 <span>📢</span>
                 <span>${message}</span>
@@ -769,14 +849,13 @@
             const grid = document.getElementById('themes-grid');
             grid.innerHTML = "";
 
-            Object.entries(categories).slice(0, 6).forEach(([key, value]) => {
+            // Affichage complet des 10 thèmes d'origine sur l'accueil
+            Object.entries(categories).slice(0, 10).forEach(([key, value]) => {
                 const count = programme.filter(m => m.cat === key).length;
                 const card = document.createElement('div');
                 card.className = "bg-white p-6 rounded-2xl border border-presidential-navy/15 shadow-sm hover:shadow-md hover:border-presidential-blue/50 transition duration-300 flex flex-col justify-between space-y-4 cursor-pointer";
                 card.onclick = () => {
-                    showPage('programme');
-                    const el = document.getElementById(`cat-block-${key}`);
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    naviguerVersTheme(key);
                 };
 
                 card.innerHTML = `
@@ -831,7 +910,7 @@
                                 <h3 class="font-title font-black text-lg text-presidential-navy">${m.titre}</h3>
                             </div>
                             <button onclick="copierMesureDirecte('${m.id}')" class="p-2 rounded-lg hover:bg-presidential-sand text-presidential-navy/60 hover:text-presidential-navy transition" title="Copier la mesure">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 00-2 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                             </button>
                         </div>
                         <p class="text-sm text-presidential-slate leading-relaxed"><strong class="text-red-600">Postulat :</strong> ${m.postulat}</p>
@@ -938,6 +1017,7 @@
 
         // Lancement au chargement
         window.onload = function() {
+            initDropdownMenu();
             initThemesAccueil();
             initProgrammeComplet();
         }
